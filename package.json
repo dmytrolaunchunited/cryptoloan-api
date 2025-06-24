@@ -1,0 +1,25 @@
+{
+  "name": "cryptoloan-api",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.1",
+    "dotenv": "^16.5.0",
+    "drizzle-kit": "^0.31.2",
+    "drizzle-orm": "^0.44.2",
+    "next": "15.3.4",
+    "next-swagger-doc": "^0.4.1",
+    "swagger-ui-react": "^5.25.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/swagger-ui-react": "^5.18.0",
+    "typescript": "^5"
+  }
+}
