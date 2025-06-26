@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { eq, and, count, desc, lte, gte } from "drizzle-orm";
+import { eq, count, desc } from "drizzle-orm";
 import { db } from "../../../db";
 import { users } from "../../../db/schema";
 
@@ -35,7 +35,7 @@ export const GET = async (request: NextRequest) => {
     return new NextResponse('Unauthorized', { status: 401 });
   }
   if (apiKey === process.env.API_KEY) {
-    return new NextResponse('Forbidden', { status: 401 });
+    return new NextResponse('Forbidden', { status: 403 });
   }
 
   const limit = Number(request.nextUrl.searchParams.get('limit') || 20);
@@ -87,7 +87,7 @@ export const POST = async (request: NextRequest) => {
     return new NextResponse('Unauthorized', { status: 401 });
   }
   if (apiKey !== process.env.API_KEY) {
-    return new NextResponse('Forbidden', { status: 401 });
+    return new NextResponse('Forbidden', { status: 403 });
   }
   const data = await request.json();
 
