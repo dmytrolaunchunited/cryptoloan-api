@@ -1,17 +1,19 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { createSwaggerSpec } from "next-swagger-doc";
+import { memo } from "react";
 import dynamic from "next/dynamic";
 import "swagger-ui-react/swagger-ui.css";
 
 interface Props {
-   spec: any;
+  spec: any;
 }
 
-const SwaggerUI = dynamic<Props>(import("swagger-ui-react"), { ssr: false });
+const ssr = false;
+const SwaggerUI = dynamic<Props>(import("swagger-ui-react"), { ssr });
 
-function ApiDoc({ spec }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default memo(({ spec }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return <SwaggerUI spec={spec} />;
-}
+})
 
 export const getStaticProps: GetStaticProps = async () => {
   const spec: Record<string, any> = createSwaggerSpec({
@@ -23,8 +25,8 @@ export const getStaticProps: GetStaticProps = async () => {
       }],
       openapi: "3.0.0",
       info: {
-        title: "Bitloan Swagger API",
-        version: "1.0",
+        title: "CryptoLoan Swagger API",
+        version: "0.0.1",
       },
       components: {
         securitySchemes: {
@@ -41,5 +43,3 @@ export const getStaticProps: GetStaticProps = async () => {
   const props = { spec };
   return { props };
 };
-
-export default ApiDoc;

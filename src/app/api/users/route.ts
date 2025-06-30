@@ -34,7 +34,7 @@ export const GET = async (request: NextRequest) => {
   if (!apiKey) {
     return new NextResponse('Unauthorized', { status: 401 });
   }
-  if (apiKey === process.env.API_KEY) {
+  if (apiKey !== process.env.API_KEY) {
     return new NextResponse('Forbidden', { status: 403 });
   }
 
@@ -65,7 +65,8 @@ export const GET = async (request: NextRequest) => {
  *   post:
  *     summary: Upsert user
  *     security:
- *       - ApiKeyAuth: []   
+ *       - ApiName: []
+ *       - ApiUUID: []
  *     tags:
  *       - user
  *     requestBody:
