@@ -33,11 +33,11 @@ import { conditions } from "../../../../db/schema";
  */
 export const GET = async (request: NextRequest) => {
   try {
-    const secretKey = request.headers.get('X-SECRET-KEY');
+    const secretKey = request.headers.get('X-Secret-Key');
     if (!secretKey) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
-    if (secretKey !== process.env.SECRET) {
+    if (secretKey !== process.env.SECRET_KEY) {
       return new NextResponse('Forbidden', { status: 403 });
     }
 
@@ -56,10 +56,15 @@ export const GET = async (request: NextRequest) => {
       .select({ count: count() })
       .from(conditions);
 
-    return NextResponse.json(
-      { ...rowsCount[0], rows },
-      { status: 200 },
-    );
+    const totalCount = rowsCount[0].count.toString();
+    const contentRange = `conditions ${offset}-${limit - 1}/${totalCount}`
+    const response = NextResponse.json(rows, { status: 200 });
+      
+    response.headers.set('Content-Range', contentRange);
+    response.headers.set('X-Total-Count', totalCount);
+    response.headers.set('Access-Control-Expose-Headers', 'X-Total-Count, Content-Range');
+
+    return response;
   } catch (error) {
     console.error('[API][GET][Admin][conditions]', error);
     return new NextResponse('Bad Request', { status: 400 });

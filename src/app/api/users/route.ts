@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { eq, count, desc } from "drizzle-orm";
-import { db } from "../../../db";
+import { db, generateApplications, generateConditions } from "../../../db";
 import { users } from "../../../db/schema";
 
 /**
@@ -65,8 +65,7 @@ export const GET = async (request: NextRequest) => {
  *   post:
  *     summary: Upsert user
  *     security:
- *       - ApiName: []
- *       - ApiUUID: []
+ *       - ApiKeyAuth: []   
  *     tags:
  *       - user
  *     requestBody:
@@ -83,31 +82,33 @@ export const GET = async (request: NextRequest) => {
  *         description: success operation
  */
 export const POST = async (request: NextRequest) => {
-  const apiKey = request.headers.get('X-API-KEY');
-  if (!apiKey) {
-    return new NextResponse('Unauthorized', { status: 401 });
-  }
-  if (apiKey !== process.env.API_KEY) {
-    return new NextResponse('Forbidden', { status: 403 });
-  }
-  const data = await request.json();
+  // await generateApplications();
+  // await generateConditions();
+  // const apiKey = request.headers.get('X-API-KEY');
+  // if (!apiKey) {
+  //   return new NextResponse('Unauthorized', { status: 401 });
+  // }
+  // if (apiKey !== process.env.API_KEY) {
+  //   return new NextResponse('Forbidden', { status: 403 });
+  // }
+  // const data = await request.json();
 
-  const rows = await db
-    .select()
-    .from(users)
-    .where(eq(users.privy, data.privy))
-    .limit(1);
+  // const rows = await db
+  //   .select()
+  //   .from(users)
+  //   .where(eq(users.privy, data.privy))
+  //   .limit(1);
   
-  if (rows.length) {
-    await db
-      .update(users)
-      .set(data)
-      .where(eq(users.privy, data.privy));
-  } else {
-    await db
-      .insert(users)
-      .values({ ...data });
-  }
+  // if (rows.length) {
+  //   await db
+  //     .update(users)
+  //     .set(data)
+  //     .where(eq(users.privy, data.privy));
+  // } else {
+  //   await db
+  //     .insert(users)
+  //     .values({ ...data });
+  // }
   return NextResponse.json(
     null,
     { status: 204 },

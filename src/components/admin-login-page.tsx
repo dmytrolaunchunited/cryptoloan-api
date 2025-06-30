@@ -1,8 +1,49 @@
-import { FC, memo } from 'react';
+import { ChangeEvent, FC, memo, useCallback, useState } from 'react';
 import { Box, Button, TextField, Tooltip, Typography } from '@mui/material';
-import { Login } from 'react-admin';
+import { Login, useLogin, useNotify, useRedirect } from 'react-admin';
 
 export const AdminLoginPage: FC = memo(() => {
+  const [loading, setLoading] = useState(false);
+  const [secretKey, setSecretKey] = useState('');
+  const login = useLogin();
+  const notify = useNotify();
+  const redirect = useRedirect()
+
+  const onClickSubmit = useCallback(async () => {
+    setLoading(true);
+    if (!secretKey) {
+      const type = 'warning';
+      notify('Invalid secret key. Please check and try again.', { type });
+      setLoading(false);
+      return;
+    }
+    
+
+    const data = await fetch('/api/admin/auth', {
+      method: "POST",
+      body: JSON.stringify({ secretKey }),
+    });
+
+    if (!data.ok) {
+      console.error('[ADMIN][AdminLoginPage][onClickSubmit]', data.statusText);
+      const type = 'error';
+      notify('Oops… Something went wrong.', { type });
+      setLoading(false);
+      return;
+    }
+
+    localStorage.setItem('secretKey', secretKey);
+    redirect('/');
+
+    const type = 'info';
+    notify('Login successful. Welcome!', { type });
+    setLoading(false);
+  }, [login, setLoading, secretKey, notify, redirect]);
+
+  const onChangeSecretKey = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    setSecretKey(event.target.value);
+  }, [setSecretKey]);
+
   return (
     <Login avatarIcon={<></>} sx={{
       '& .RaLogin-avatar': {
@@ -59,11 +100,8 @@ export const AdminLoginPage: FC = memo(() => {
               marginTop: 3,
             }}
             fullWidth
-            // error={!!props.errors.email && !!props.touched.email}
-            // value={props.values.email}
-            // onChange={props.handleChange}
-            // onBlur={props.handleBlur}
-            // helperText={props.touched.email && props.errors.email}
+            value={secretKey}
+            onChange={onChangeSecretKey}
             margin="normal"
             variant="outlined"
             label="Secret Key"
@@ -75,7 +113,7 @@ export const AdminLoginPage: FC = memo(() => {
           display: 'flex',
           justifyContent: 'end',
           alignItems: 'center',
-                        marginTop: 1,
+          marginTop: 1,
         }}>
           <Tooltip arrow title="Connect with Administrator">
             <Button
@@ -96,8 +134,9 @@ export const AdminLoginPage: FC = memo(() => {
               borderRadius: 14,
               paddingX: 3,
             }}
-            loading={false}
-            disabled={false}
+            onClick={onClickSubmit}
+            loading={loading}
+            disabled={loading}
             variant="outlined"
             type="submit"
             color="primary"

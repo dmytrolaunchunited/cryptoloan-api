@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, serial, timestamp, varchar, integer } from "drizzle-orm/pg-core";
+import { pgTable, serial, timestamp, varchar, integer, boolean } from "drizzle-orm/pg-core";
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
@@ -23,9 +23,10 @@ export const applications = pgTable('applications', {
 export const conditions = pgTable('conditions', {
   id: serial('id').primaryKey(),
   applicationId: integer('application_id').references(() => applications.id),
-  scoringFeature: varchar('coring_feature'),
+  scoringFeature: varchar('scoring_feature'),
   scoringFeatureOption: varchar('scoring_feature_option'),
   scoring: integer(),
+  isActive: boolean('is_active').default(true),
   scoringType: varchar('scoring_type'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),

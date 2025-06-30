@@ -1,4 +1,4 @@
-import { Admin, Resource, ListGuesser, EditGuesser, AuthProvider, fetchUtils } from "react-admin";
+import { Admin, Resource, ListGuesser, AuthProvider, fetchUtils, useNotify } from "react-admin";
 import { memo, useMemo } from "react";
 import { createTheme } from "@mui/material";
 import simpleRestProvider from "ra-data-simple-rest";
@@ -16,6 +16,7 @@ interface CheckError {
 
 const App = memo(() => {
   const palette = usePalette();
+  const notify = useNotify();
   const theme = createTheme({ palette });
   
   const dataProvider = useMemo(() => {
@@ -23,7 +24,7 @@ const App = memo(() => {
       const headers = new Headers(options.headers || { Accept: 'application/json'});
       const secretKey = localStorage.getItem('secretKey');
 
-      headers.set('X-SECRET-KET', secretKey || '');
+      headers.set('X-Secret-Key', secretKey || '');
 
       options.headers = headers;
       return fetchUtils.fetchJson(url, options);
@@ -32,9 +33,27 @@ const App = memo(() => {
 
   const authProvider = useMemo(() => {
     return {
-      login: async (params: Login) => {
-        localStorage.setItem('secretKey', params.secretKey);
-      },
+      // login: async ({ secretKey }: Login) => {
+      //   try {
+      //     if (!secretKey) {
+      //       const type = 'warning';
+      //       notify('Invalid secret key. Please check and try again.', { type });
+      //       return;
+      //     }
+      //     await fetch('/api/admin/auth', {
+      //       method: "POST",
+      //       body: JSON.stringify({ secretKey }),
+      //     });
+      //     localStorage.setItem('secretKey', secretKey);
+
+      //     const type = 'info';
+      //     notify('Login successful. Welcome!', { type });
+      //   } catch (err) {
+      //     console.error('[ADMIN][authProvider][login]', err);
+      //     const type = 'error';
+      //     notify('Oops… Something went wrong.', { type });
+      //   }
+      // },
       logout: async () => {
         localStorage.removeItem('secretKey');
       },
@@ -54,7 +73,7 @@ const App = memo(() => {
         return null //{ id: 'test', fullName: 'test' };
       },
     } as unknown as AuthProvider;
-  }, []);
+  }, [notify]);
 
   const loginPage = useMemo(() => {
     return AdminLoginPage;
@@ -63,10 +82,16 @@ const App = memo(() => {
   return (
     <Admin theme={theme} loginPage={loginPage} dataProvider={dataProvider} authProvider={authProvider}>
       <Resource
-        name="users"
+        name="applications"
         list={ListGuesser}
-        edit={EditGuesser}
-        recordRepresentation="name"
+        // edit={EditGuesser}
+        recordRepresentation="id"
+      />
+      <Resource
+        name="conditions"
+        list={ListGuesser}
+        // edit={EditGuesser}
+        recordRepresentation="id"
       />
     </Admin>
   );
