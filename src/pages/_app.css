@@ -2,3 +2,11 @@ html, body {
   margin: 0;
   padding: 0;
 }
+.RaSidebar-paperAnchorDockedLeft .MuiSvgIcon-root {
+  width: 18px;
+  height: 18px;
+}
+.MuiAppBar-root .MuiSvgIcon-root {
+  width: 18px;
+  height: 18px;
+}

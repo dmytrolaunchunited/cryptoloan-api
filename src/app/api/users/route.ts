@@ -109,8 +109,5 @@ export const POST = async (request: NextRequest) => {
   //     .insert(users)
   //     .values({ ...data });
   // }
-  return NextResponse.json(
-    null,
-    { status: 204 },
-  );
+  return new NextResponse(null, { status: 204 });
 }

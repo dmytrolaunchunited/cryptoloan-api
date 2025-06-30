@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@mui/icons-material": "^7.2.0",
     "@neondatabase/serverless": "^1.0.1",
     "dotenv": "^16.5.0",
     "drizzle-kit": "^0.31.2",

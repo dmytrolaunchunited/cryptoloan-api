@@ -11,6 +11,30 @@ export enum ScoringTypes {
   Behavioral = 'behavioral',
 }
 
+export enum ScoringFeatureGenderTypes {
+  A, // 'male',
+  B, // 'female',
+}
+
+export enum ScoringFeatureFlagTypes {
+  Yes,
+  No,
+}
+
+export enum ScoringFeatureEducationTypes {
+  A, // 'minimum-secondary',
+  B, // 'general-secondary',
+}
+
+export enum ScoringFeatureEmployedTypes {
+  A, // 'official',
+  B, // 'informal',
+  C, // 'entrepreneur',
+  D, // 'freelance',
+  E, // 'student',
+  F, // 'unemployed',
+}
+
 export enum ScoringFeatures {
   Age = "age",
   Gender = "gender",
@@ -29,7 +53,6 @@ export enum ScoringFeatures {
   HasUtilityDebt = "has_utility_debt",
   SmsIncomeDetected = "sms_income_detected",
   SmsOverdueDetectedLast30Days = "sms_overdue_detected_last_30_days",
-
   PaidLoansByClientPhone = "paid_loans_by_client_phone",
   ZodiacCompletionTime = "zodiac_completion_time",
   PaidLoansByClientPhoneDuplicate = "paid_loans_by_client_phone_duplicate",
@@ -106,98 +129,98 @@ export const generateConditions = async () => {
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.Gender,
-        scoringFeatureOption: 'male',
+        scoringFeatureOption: ScoringFeatureGenderTypes.A.toString(),
         scoring: 7,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.Gender,
-        scoringFeatureOption: 'female',
+        scoringFeatureOption: ScoringFeatureGenderTypes.B.toString(),
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.IsEmployed,
-        scoringFeatureOption: 'yes',
+        scoringFeatureOption: ScoringFeatureFlagTypes.Yes.toString(),
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.IsEmployed,
-        scoringFeatureOption: 'no',
+        scoringFeatureOption: ScoringFeatureFlagTypes.No.toString(),
         scoring: 0,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.IsMarried,
-        scoringFeatureOption: 'yes',
+        scoringFeatureOption: ScoringFeatureFlagTypes.Yes.toString(),
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.IsMarried,
-        scoringFeatureOption: 'no',
+        scoringFeatureOption: ScoringFeatureFlagTypes.No.toString(),
         scoring: 2,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.Education,
-        scoringFeatureOption: 'minimum-secondary',
+        scoringFeatureOption: ScoringFeatureEducationTypes.A.toString(),
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.Education,
-        scoringFeatureOption: 'general-secondary',
+        scoringFeatureOption: ScoringFeatureEducationTypes.B.toString(),
         scoring: 2,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.EmploymentType,
-        scoringFeatureOption: 'official',
+        scoringFeatureOption: ScoringFeatureEmployedTypes.A.toString(),
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.EmploymentType,
-        scoringFeatureOption: 'informal',
+        scoringFeatureOption: ScoringFeatureEmployedTypes.B.toString(),
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.EmploymentType,
-        scoringFeatureOption: 'entrepreneur',
+        scoringFeatureOption: ScoringFeatureEmployedTypes.C.toString(),
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.EmploymentType,
-        scoringFeatureOption: 'freelance',
+        scoringFeatureOption: ScoringFeatureEmployedTypes.D.toString(),
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.EmploymentType,
-        scoringFeatureOption: 'student',
+        scoringFeatureOption: ScoringFeatureEmployedTypes.E.toString(),
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.EmploymentType,
-        scoringFeatureOption: 'unemployed',
+        scoringFeatureOption: ScoringFeatureEmployedTypes.F.toString(),
         scoring: 0,
       },
       {
@@ -225,28 +248,28 @@ export const generateConditions = async () => {
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.HasActiveLoans,
-        scoringFeatureOption: 'yes',
+        scoringFeatureOption: ScoringFeatureFlagTypes.Yes.toString(),
         scoring: 0,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.HasActiveLoans,
-        scoringFeatureOption: 'no',
+        scoringFeatureOption: ScoringFeatureFlagTypes.No.toString(),
         scoring: 2,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.HasCryptoWallets,
-        scoringFeatureOption: 'yes',
+        scoringFeatureOption: ScoringFeatureFlagTypes.Yes.toString(),
         scoring: 2,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.HasCryptoWallets,
-        scoringFeatureOption: 'no',
+        scoringFeatureOption: ScoringFeatureFlagTypes.No.toString(),
         scoring: 0,
       },
       { 
@@ -323,14 +346,14 @@ export const generateConditions = async () => {
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.HasBankAccounts,
-        scoringFeatureOption: 'yes',
+        scoringFeatureOption: ScoringFeatureFlagTypes.Yes.toString(),
         scoring: 2,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.HasBankAccounts,
-        scoringFeatureOption: 'no',
+        scoringFeatureOption: ScoringFeatureFlagTypes.No.toString(),
         scoring: 0,
       },
       { 
@@ -372,14 +395,14 @@ export const generateConditions = async () => {
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.HasUtilityDebt,
-        scoringFeatureOption: 'yes',
+        scoringFeatureOption: ScoringFeatureFlagTypes.Yes.toString(),
         scoring: -10,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.HasUtilityDebt,
-        scoringFeatureOption: 'no',
+        scoringFeatureOption: ScoringFeatureFlagTypes.No.toString(),
         scoring: 5,
       },
       { 
@@ -414,14 +437,14 @@ export const generateConditions = async () => {
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.SmsOverdueDetectedLast30Days,
-        scoringFeatureOption: 'yes',
+        scoringFeatureOption: ScoringFeatureFlagTypes.Yes.toString(),
         scoring: -10,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.SmsOverdueDetectedLast30Days,
-        scoringFeatureOption: 'no',
+        scoringFeatureOption: ScoringFeatureFlagTypes.No.toString(),
         scoring: 0,
       },
       { 

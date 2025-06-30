@@ -1,14 +1,17 @@
-import { Admin, Resource, ListGuesser, AuthProvider, fetchUtils, useNotify } from "react-admin";
+import { Admin, Resource, AuthProvider, fetchUtils, useNotify } from "react-admin";
 import { memo, useMemo } from "react";
 import { createTheme } from "@mui/material";
+import { Description } from '@mui/icons-material';
 import simpleRestProvider from "ra-data-simple-rest";
 import dynamic from "next/dynamic";
 import { AdminLoginPage } from "../components/admin-login-page";
 import { usePalette } from "../hooks/palette";
+import { AdminApplicationList } from "../components/admin-application-list";
+import { AdminApplicationEdit } from "../components/admin-application-edit";
+import { AdminApplicationCreate } from "../components/admin-application-create";
 
-interface Login {
-  secretKey: string;
-}
+import { AdminConditionList } from "../components/admin-condition-list";
+import { AdminLayout } from "../components/admin-layout";
 
 interface CheckError {
   status: number;
@@ -58,16 +61,24 @@ const App = memo(() => {
     return AdminLoginPage;
   }, []);
 
+  const layout = useMemo(() => {
+    return AdminLayout;
+  }, []);
+
   return (
-    <Admin theme={theme} loginPage={loginPage} dataProvider={dataProvider} authProvider={authProvider}>
+    <Admin theme={theme} layout={layout} loginPage={loginPage} dataProvider={dataProvider} authProvider={authProvider}>
       <Resource
         name="applications"
-        list={ListGuesser}
+        icon={Description}
+        list={AdminApplicationList}
+        edit={AdminApplicationEdit}
+        create={AdminApplicationCreate}
         recordRepresentation="id"
       />
       <Resource
         name="conditions"
-        list={ListGuesser}
+        icon={Description}
+        list={AdminConditionList}
         recordRepresentation="id"
       />
     </Admin>
