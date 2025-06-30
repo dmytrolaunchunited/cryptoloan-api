@@ -38,7 +38,7 @@ export default memo(() => {
                 marginLeft: 0.5,
               }}>beta {publicRuntimeConfig.version}</Typography>
             </Box>
-            <Typography variant="subtitle1" sx={{
+            <Typography variant="subtitle1" color="secondary" sx={{
               fontWeight: 100,
               lineHeight: 1,
             }}>Instant USDT, fair terms.</Typography>
