@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
-import { count, desc } from "drizzle-orm";
+import { count, desc, asc, or, SQL } from "drizzle-orm";
+import { PgColumn } from "drizzle-orm/pg-core";
 import { db } from "../../../../db";
 import { conditions } from "../../../../db/schema";
 
@@ -12,15 +13,6 @@ import { conditions } from "../../../../db/schema";
  *       - ApiKeyAuth: []   
  *     tags:
  *       - admin
- *     parameters:
- *       - in: query
- *         type: integer
- *         name: limit
- *         description: The limit of find records 
- *       - in: query
- *         type: integer
- *         name: offset
- *         description: The offset of find records 
  *     responses:
  *       400:
  *         description: bad request
@@ -41,14 +33,12 @@ export const GET = async (request: NextRequest) => {
       return new NextResponse('Forbidden', { status: 403 });
     }
 
-    const limit = Number(request.nextUrl.searchParams.get('limit') || 20);
-    const offset = Number(request.nextUrl.searchParams.get('offset') || 0);
+    const [limit, offset, orderBy] = searchParams(request);
 
     const rows = await db
       .select()
       .from(conditions)
-      .orderBy(desc(conditions.createdAt))
-      .groupBy(conditions.id, conditions.createdAt)
+      .orderBy(orderBy)
       .limit(limit)
       .offset(offset);
 
@@ -69,4 +59,30 @@ export const GET = async (request: NextRequest) => {
     console.error('[API][GET][Admin][conditions]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
+}
+
+const FIELDS: Record<any, PgColumn<any>> = {
+  id: conditions.id,
+  updatedAt: conditions.updatedAt,
+};
+
+const DEFAULT_SORT = ["updatedAt", "DESC"];
+const DEFAULT_RANGE = [0, 9];
+
+const searchParams = (request: NextRequest): [number, number, SQL<unknown>] => {
+  const { searchParams } = new URL(request.url);
+
+  const range = searchParams.get("range");
+  const [rangeA, rangeB] = range ? JSON.parse(range) : DEFAULT_RANGE;
+
+  const rangeLimit = rangeB - rangeA + 1;
+  const rangeOffset = rangeA;
+
+  const sort = searchParams.get("sort");
+  const [sortA, sortB] = sort ? JSON.parse(sort) : DEFAULT_SORT;
+
+  const sortOrderByFn = sortB === "ASC" ? asc : desc;
+  const sortOrderBy = sortOrderByFn(FIELDS[sortA] || conditions.updatedAt);
+
+  return [rangeLimit, rangeOffset, sortOrderBy];
 }

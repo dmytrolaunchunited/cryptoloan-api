@@ -33,27 +33,6 @@ const App = memo(() => {
 
   const authProvider = useMemo(() => {
     return {
-      // login: async ({ secretKey }: Login) => {
-      //   try {
-      //     if (!secretKey) {
-      //       const type = 'warning';
-      //       notify('Invalid secret key. Please check and try again.', { type });
-      //       return;
-      //     }
-      //     await fetch('/api/admin/auth', {
-      //       method: "POST",
-      //       body: JSON.stringify({ secretKey }),
-      //     });
-      //     localStorage.setItem('secretKey', secretKey);
-
-      //     const type = 'info';
-      //     notify('Login successful. Welcome!', { type });
-      //   } catch (err) {
-      //     console.error('[ADMIN][authProvider][login]', err);
-      //     const type = 'error';
-      //     notify('Oops… Something went wrong.', { type });
-      //   }
-      // },
       logout: async () => {
         localStorage.removeItem('secretKey');
       },
@@ -84,13 +63,11 @@ const App = memo(() => {
       <Resource
         name="applications"
         list={ListGuesser}
-        // edit={EditGuesser}
         recordRepresentation="id"
       />
       <Resource
         name="conditions"
         list={ListGuesser}
-        // edit={EditGuesser}
         recordRepresentation="id"
       />
     </Admin>

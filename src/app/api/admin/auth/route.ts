@@ -11,7 +11,7 @@ import { NextRequest, NextResponse } from "next/server";
  *       content:
  *         application/json:
  *           example:
- *             secretKey: cmcch0i1t01cel50nj19qd2eo
+ *             secretKey: ...
  *     responses:
  *       403:
  *         description: forbidden
