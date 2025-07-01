@@ -3,14 +3,6 @@ import { applications } from "../../../../../db/schema";
 import { NextResponse, NextRequest } from "next/server";
 import { eq } from "drizzle-orm";
 
-interface Params {
-  id: string;
-}
-
-interface Context {
-  params: Params;
-}
-
 /**
  * @swagger
  * /api/admin/applications/:id:
@@ -28,7 +20,7 @@ interface Context {
  *       200:
  *         description: success operation
  */
-export const GET = async (request: NextRequest, { params }: Context) => {
+export const GET = async (request: NextRequest, { params }: any) => {
   try {
     const secretKey = request.headers.get('X-Secret-Key');
     if (!secretKey) {
