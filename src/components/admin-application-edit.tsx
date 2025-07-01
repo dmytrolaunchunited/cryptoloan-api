@@ -4,9 +4,11 @@ import { Button, Edit, required, SaveButton, SimpleForm, TextInput, Toolbar, use
 
 const EditToolbar: FC = memo(() => {
   const redirect = useRedirect();
+  
   const onClickCancel = useMemo(() => () => {
     redirect('/applications');
   }, [redirect]);
+
   return (
     <Toolbar sx={{
       '&.MuiToolbar-root': {
@@ -43,7 +45,9 @@ export const AdminApplicationEdit: FC = memo(() => {
 
   return (
     <Edit>
-      <SimpleForm toolbar={toolbar}>
+      <SimpleForm toolbar={toolbar} sx={{
+        paddingBottom: 0,
+      }}>
           <TextInput disabled label="Id" source="id" />
           <TextInput source="name" validate={required()} />
           <TextInput source="uuid" validate={required()} />

@@ -14,7 +14,7 @@ const filters = [
 const Actions: FC = memo(() => {
   return (
     <TopToolbar>
-      <SelectColumnsButton preferenceKey="application.table" sx={{
+      <SelectColumnsButton preferenceKey="user.table" sx={{
         '&.MuiButtonBase-root': {
           padding: 1,
           borderRadius: 18,
@@ -39,7 +39,7 @@ const Actions: FC = memo(() => {
   );
 });
 
-export const AdminApplicationList: FC = memo(() => {
+export const AdminUserList: FC = memo(() => {
   const actions = <Actions />;
   const empty = <AdminEmpty />;
 
@@ -52,9 +52,7 @@ export const AdminApplicationList: FC = memo(() => {
         minHeight: 'auto',
       }
     }}>
-      <DatagridConfigurable
-        preferenceKey="application.table"
-      >
+      <DatagridConfigurable preferenceKey="user.table">
         <TextField
           source="id"
           label="ID"
@@ -62,9 +60,8 @@ export const AdminApplicationList: FC = memo(() => {
         <FunctionField label="NAME" render={i => (
           <Chip label={i.name.toUpperCase()}/>
         )} />
-        <DateField
-          label="UPDATED AT"
-          source="updatedAt" showTime showDate />
+        <DateField label="UPDATED AT" source="updatedAt" showTime showDate />
+
         <WrapperField label="ACTIONS" source="createdAt" textAlign="right" sortable={false}>
           <EditButton sx={{
             '&.MuiButtonBase-root': {

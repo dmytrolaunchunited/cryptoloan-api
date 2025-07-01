@@ -1,6 +1,7 @@
 import { FC, memo } from "react";
-import { BooleanField, CreateButton, DataTable, DateField, ExportButton, FunctionField, List, NumberField, ReferenceField, SearchInput, TopToolbar } from "react-admin";
+import { BooleanField, CreateButton, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, List, NumberField, ReferenceField, SearchInput, SelectColumnsButton, TextField, TopToolbar, WrapperField } from "react-admin";
 import { Chip } from '@mui/material';
+import { AdminEmpty } from "./admin-empty";
 
 const scoringTypes: Record<string, string> = {
   social: 'Social Scoring',
@@ -46,6 +47,13 @@ const filters = [
 const Actions = memo(() => {
   return (
     <TopToolbar>
+      <SelectColumnsButton preferenceKey="condition.table" sx={{
+        '&.MuiButtonBase-root': {
+          padding: 1,
+          borderRadius: 18,
+          paddingX: 2,
+        }
+      }} />
       <CreateButton sx={{
         '&.MuiButtonBase-root': {
           padding: 1,
@@ -66,9 +74,10 @@ const Actions = memo(() => {
 
 export const AdminConditionList: FC = memo(() => {
   const actions = <Actions />;
+  const empty = <AdminEmpty />;
 
   return (
-    <List filters={filters} actions={actions} sx={{
+    <List filters={filters} empty={empty} actions={actions} sx={{
       '& .RaList-actions': {
         alignItems: 'center',
       },
@@ -76,62 +85,73 @@ export const AdminConditionList: FC = memo(() => {
         minHeight: 'auto',
       }
     }}>
-      <DataTable rowSx={(i: any) => ({
-        backgroundColor: i.scoringType === 'social' ? 'rgb(76, 175, 80, 0.1)' : 'rgb(239, 83, 80, 0.1)',
-      })}>
-        <DataTable.Col source="id" label="ID" />
-        <DataTable.Col label="APPLICATION">
-          <ReferenceField source="applicationId" reference="applications">
-            <FunctionField render={i => (
-              <Chip label={i.name.toUpperCase()}/>
-            )} />
-          </ReferenceField>
-        </DataTable.Col>
-        <DataTable.Col label="SCORING TYPE">
+      <DatagridConfigurable
+        preferenceKey="condition.table"
+        rowSx={(i: any) => ({
+          backgroundColor: i.scoringType === 'social' ? 'rgb(76, 175, 80, 0.1)' : 'rgb(239, 83, 80, 0.1)',
+        })}
+      >
+        <TextField
+          source="id"
+          label="ID"
+        />
+        <ReferenceField label="APPLICATION" source="applicationId" reference="applications">
           <FunctionField render={i => (
-            <Chip label={scoringTypes[i.scoringType]}/>
+            <Chip label={i.name.toUpperCase()}/>
           )} />
-        </DataTable.Col>
-        <DataTable.Col label="SCORING FEATURE">
-          <FunctionField render={i => (
-            <Chip label={scoringFeatures[i.scoringFeature]}/>
-          )} />
-        </DataTable.Col>
-        <DataTable.Col label="SCORING FEATURE OPTION" width={300}>
-          <FunctionField render={i => {
-            // if (i.scoringFeatureOption.includes('eq')) {
-            //   const [, value] = i.scoringFeatureOption.split('eq');
-            //   return `=${value}`;
-            // }
-            // if (i.scoringFeatureOption.includes('lte')) {
-            //   const [, value] = i.scoringFeatureOption.split('lte');
-            //   return `<=${value}`;
-            // }
-            // if (i.scoringFeatureOption.includes('lt')) {
-            //   const [, value] = i.scoringFeatureOption.split('lt');
-            //   return `<${value}`;
-            // }
-            // if (i.scoringFeatureOption.includes('gte')) {
-            //   const [, value] = i.scoringFeatureOption.split('gte');
-            //   return `>=${value}`;
-            // }
-            // if (i.scoringFeatureOption.includes('gt')) {
-            //   const [, value] = i.scoringFeatureOption.split('gt');
-            //   return `>${value}`;
-            // }
-            return i.scoringFeatureOption
-          }} />
-        </DataTable.Col>
-        <DataTable.Col label="SCORING">
-          <NumberField source="scoring" />
-        </DataTable.Col>
-        <DataTable.Col label="ACTIVE">
-          <BooleanField source="isActive" />
-        </DataTable.Col>
-        <DataTable.Col label="UPDATED AT" width={200}>
-          <DateField source="updatedAt" showTime showDate />
-        </DataTable.Col>
-      </DataTable>
+        </ReferenceField>
+        <FunctionField label="SCORING TYPE" render={i => (
+          <Chip label={scoringTypes[i.scoringType]}/>
+        )} />
+        <FunctionField label="SCORING FEATURE" render={i => (
+          <Chip label={scoringFeatures[i.scoringFeature]}/>
+        )} />
+
+        <FunctionField label="SCORING FEATURE OPTION" render={i => {
+          // if (i.scoringFeatureOption.includes('eq')) {
+          //   const [, value] = i.scoringFeatureOption.split('eq');
+          //   return `=${value}`;
+          // }
+          // if (i.scoringFeatureOption.includes('lte')) {
+          //   const [, value] = i.scoringFeatureOption.split('lte');
+          //   return `<=${value}`;
+          // }
+          // if (i.scoringFeatureOption.includes('lt')) {
+          //   const [, value] = i.scoringFeatureOption.split('lt');
+          //   return `<${value}`;
+          // }
+          // if (i.scoringFeatureOption.includes('gte')) {
+          //   const [, value] = i.scoringFeatureOption.split('gte');
+          //   return `>=${value}`;
+          // }
+          // if (i.scoringFeatureOption.includes('gt')) {
+          //   const [, value] = i.scoringFeatureOption.split('gt');
+          //   return `>${value}`;
+          // }
+          return i.scoringFeatureOption
+        }} />
+
+        <NumberField label="SCORING" source="scoring" />
+        <BooleanField label="ACTIVE" source="isActive" />
+        <DateField label="UPDATED AT" source="updatedAt" showTime showDate />
+
+        <WrapperField label="ACTIONS" source="createdAt" textAlign="right" sortable={false}>
+          <EditButton sx={{
+            '&.MuiButtonBase-root': {
+              padding: 1,
+              borderRadius: 18,
+              paddingX: 2,
+            }
+          }}/>
+          <DeleteButton sx={{
+            '&.MuiButtonBase-root': {
+              padding: 1,
+              borderRadius: 18,
+              paddingX: 2,
+            }
+          }}/>
+        </WrapperField>
+      </DatagridConfigurable>
     </List>
   );
 });

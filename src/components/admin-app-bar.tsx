@@ -7,8 +7,6 @@ const { publicRuntimeConfig } = getConfig();
 
 export const AdminAppBar: FC = memo((props) => (
   <AppBar {...props}>
-
-
     <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
       <Box>
         <Typography variant="body1" sx={{
@@ -24,15 +22,6 @@ export const AdminAppBar: FC = memo((props) => (
           color="secondary"
         >Admin {publicRuntimeConfig.version}</Typography>
       </Box>
-      <Typography
-        sx={{
-          fontSize: 12,
-          marginLeft: 1,
-        }}
-        variant="body2"
-        color="secondary"
-        id="react-admin-title"
-      />
     </Box>
   </AppBar>
 ));

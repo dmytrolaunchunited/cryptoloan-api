@@ -12,6 +12,9 @@ import { AdminApplicationCreate } from "../components/admin-application-create";
 
 import { AdminConditionList } from "../components/admin-condition-list";
 import { AdminLayout } from "../components/admin-layout";
+import { AdminDashboard } from "../components/admin-dashboard";
+import { AdminCatchAll } from "../components/admin-catch-all";
+import { AdminUserList } from "../components/admin-user-list";
 
 interface CheckError {
   status: number;
@@ -65,8 +68,24 @@ const App = memo(() => {
     return AdminLayout;
   }, []);
 
+  const dashboard = useMemo(() => {
+    return AdminDashboard;
+  }, []);
+
+  const catchAll = useMemo(() => {
+    return AdminCatchAll;
+  }, []);
+
   return (
-    <Admin theme={theme} layout={layout} loginPage={loginPage} dataProvider={dataProvider} authProvider={authProvider}>
+    <Admin theme={theme} catchAll={catchAll} dashboard={dashboard} layout={layout} loginPage={loginPage} dataProvider={dataProvider} authProvider={authProvider}>
+      <Resource
+        name="users"
+        icon={Description}
+        list={AdminUserList}
+        // edit={AdminApplicationEdit}
+        // create={AdminApplicationCreate}
+        recordRepresentation="id"
+      />
       <Resource
         name="applications"
         icon={Description}
