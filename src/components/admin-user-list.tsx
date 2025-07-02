@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { CreateButton, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, List, SearchInput, SelectColumnsButton, TextField, TopToolbar, WrapperField } from "react-admin";
+import { CreateButton, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, List, ReferenceField, SearchInput, SelectColumnsButton, TextField, TopToolbar, WrapperField } from "react-admin";
 import { Chip } from '@mui/material';
 import { AdminEmpty } from "./admin-empty";
 
@@ -53,13 +53,11 @@ export const AdminUserList: FC = memo(() => {
       }
     }}>
       <DatagridConfigurable preferenceKey="user.table">
-        <TextField
-          source="id"
-          label="ID"
-        />
-        <FunctionField label="NAME" render={i => (
-          <Chip label={i.name.toUpperCase()}/>
+        <TextField source="id" label="ID" />
+        <FunctionField render={i => (
+          <Chip label={i.application.name.toUpperCase()}/>
         )} />
+
         <DateField label="UPDATED AT" source="updatedAt" showTime showDate />
 
         <WrapperField label="ACTIONS" source="createdAt" textAlign="right" sortable={false}>

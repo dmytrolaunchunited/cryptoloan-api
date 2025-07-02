@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 
 /**
  * @swagger
- * /api/admin/applications/:id:
+ * /api/admin/applications/{id}:
  *   get:
  *     summary: Find user
  *     security:

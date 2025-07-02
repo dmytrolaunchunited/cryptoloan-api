@@ -19,10 +19,6 @@ export const getStaticProps: GetStaticProps = async () => {
   const spec: Record<string, any> = createSwaggerSpec({
     apiFolder: "src/app/api",
     definition: {
-      tags: [{
-        name: "user",
-        description: "Everything about your user entity",
-      }],
       openapi: "3.0.0",
       info: {
         title: "CryptoLoan Swagger API",
