@@ -13,6 +13,8 @@ import { NextRequest, NextResponse } from "next/server";
  *           example:
  *             secretKey: ...
  *     responses:
+ *       400:
+ *         description: bad request
  *       403:
  *         description: forbidden
  *       401:
@@ -21,13 +23,18 @@ import { NextRequest, NextResponse } from "next/server";
  *         description: success
  */
 export const POST = async (request: NextRequest) => {
-  const data = await request.json();
+  try {
+    const data = await request.json();
 
-  if (!data.secretKey) {
-    return new NextResponse('Unauthorized', { status: 401 });
+    if (!data.secretKey) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+    if (data.secretKey !== process.env.SECRET_KEY) {
+      return new NextResponse('Forbidden', { status: 403 });
+    }
+    return NextResponse.json(null, { status: 200 });
+  } catch (error) {
+    console.error('[API][POST][Admin][auth]', error);
+    return new NextResponse('Bad Request', { status: 400 });
   }
-  if (data.secretKey !== process.env.SECRET_KEY) {
-    return new NextResponse('Forbidden', { status: 403 });
-  }
-  return NextResponse.json(null, { status: 200 });
 }

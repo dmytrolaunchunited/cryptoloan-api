@@ -21,7 +21,7 @@ import { PgColumn } from "drizzle-orm/pg-core";
  *       401:
  *         description: unauthorized
  *       200:
- *         description: success operation
+ *         description: success
  */
 export const GET = async (request: NextRequest) => {
   try {
