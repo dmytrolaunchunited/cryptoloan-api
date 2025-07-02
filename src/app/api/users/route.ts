@@ -58,9 +58,11 @@ export const POST = async (request: NextRequest) => {
         .set(data)
         .where(eq(users.privy, data.privy));
     } else {
+      const applicationRow = applicationRows[0];
+      const applicationId = applicationRow.id;
       await db
         .insert(users)
-        .values({ ...data });
+        .values({ ...data, applicationId });
     }
     return new NextResponse(null, { status: 204 });
   } catch (error) {

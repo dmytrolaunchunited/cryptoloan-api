@@ -1,7 +1,7 @@
 import { db } from "../../../../db";
-import { applications, users } from "../../../../db/schema";
+import { applications, profiles, users } from "../../../../db/schema";
 import { NextResponse, NextRequest } from "next/server";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 /**
  * @swagger
@@ -39,11 +39,16 @@ export const GET = async (request: NextRequest, { params }: any) => {
       return new NextResponse('Forbidden', { status: 403 });
     }
 
+          const applicationRow = applicationRows[0];
+      const applicationId = applicationRow.id;
+
     const id = Number(params.id);
     const rows = await db
       .select()
       .from(users)
-      .where(eq(users.id, id))
+      .where(and(eq(users.id, id), eq(users.applicationId, applicationId)))
+      .leftJoin(applications, eq(applications.id, users.applicationId))
+      .leftJoin(profiles, eq(profiles.userId, users.id))
       .limit(1);
 
     return NextResponse.json(rows[0], { status: 200 });
