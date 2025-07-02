@@ -83,7 +83,7 @@ export const GET = async (request: NextRequest, { params }: any) => {
  *       200:
  *         description: success
  */
-export const POST = async (request: NextRequest, { params }: any) => {
+export const POST = async (request: NextRequest, context: any) => {
   try {
     const apiKey = request.headers.get('X-API-KEY');
     if (!apiKey) {
@@ -103,12 +103,15 @@ export const POST = async (request: NextRequest, { params }: any) => {
     const applicationRow = applicationRows[0];
     const applicationId = applicationRow.id;
 
+    const params = await context.params;
+    const privy = params.id;
+
     const data = await request.json();
 
     const userRows = await db
       .select()
       .from(users)
-      .where(and(eq(users.privy, params.id), eq(users.applicationId, applicationId)))
+      .where(and(eq(users.privy, privy), eq(users.applicationId, applicationId)))
       .limit(1);
 
     const userRow = userRows[0];
@@ -116,8 +119,8 @@ export const POST = async (request: NextRequest, { params }: any) => {
 
     const rows = await db
       .select()
-      .from(users)
-      .where(eq(users.id, userId))
+      .from(profiles)
+      .where(eq(profiles.userId, userId))
       .limit(1);
 
     if (rows.length) {

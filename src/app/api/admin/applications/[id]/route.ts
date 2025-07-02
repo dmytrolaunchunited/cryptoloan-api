@@ -22,7 +22,7 @@ import { eq } from "drizzle-orm";
  *       200:
  *         description: success
  */
-export const GET = async (request: NextRequest, { params }: any) => {
+export const GET = async (request: NextRequest, context: any) => {
   try {
     const secretKey = request.headers.get('X-Secret-Key');
     if (!secretKey) {
@@ -31,7 +31,10 @@ export const GET = async (request: NextRequest, { params }: any) => {
     if (secretKey !== process.env.SECRET_KEY) {
       return new NextResponse('Forbidden', { status: 403 });
     }
+
+    const params = await context.params;
     const id = Number(params.id);
+
     const rows = await db
       .select()
       .from(applications)

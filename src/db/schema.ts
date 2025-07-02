@@ -19,8 +19,8 @@ export const profiles = pgTable('profiles', {
   firstName: varchar('first_name'),
   lastName: varchar('last_name'),
   dateOfBirth: date('date_of_birth'),
-  citizenshipCountry: date('citizenship_country'),
-  residenceCountry: date('residence_country'),
+  citizenshipCountry: varchar('citizenship_country'),
+  residenceCountry: varchar('residence_country'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
