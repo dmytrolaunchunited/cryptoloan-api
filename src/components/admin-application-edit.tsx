@@ -44,7 +44,11 @@ export const AdminApplicationEdit: FC = memo(() => {
   const toolbar = <EditToolbar />;
 
   return (
-    <Edit>
+    <Edit title="APPLICATION CREATE" sx={{
+      '& .RaEdit-main': {
+        marginTop: 1,
+      }
+    }}>
       <SimpleForm toolbar={toolbar} sx={{
         paddingBottom: 0,
       }}>

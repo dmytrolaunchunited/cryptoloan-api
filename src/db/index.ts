@@ -1,7 +1,7 @@
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import { eq } from "drizzle-orm";
-import  * as schema from "./schema";
+import * as schema from "./schema";
 
 const client = neon(process.env.DATABASE_URL!);
 export const db = drizzle({ client, schema });
@@ -9,30 +9,6 @@ export const db = drizzle({ client, schema });
 export enum ScoringTypes {
   Social = 'social',
   Behavioral = 'behavioral',
-}
-
-export enum ScoringFeatureGenderTypes {
-  A, // 'male',
-  B, // 'female',
-}
-
-export enum ScoringFeatureFlagTypes {
-  Yes,
-  No,
-}
-
-export enum ScoringFeatureEducationTypes {
-  A, // 'minimum-secondary',
-  B, // 'general-secondary',
-}
-
-export enum ScoringFeatureEmployedTypes {
-  A, // 'official',
-  B, // 'informal',
-  C, // 'entrepreneur',
-  D, // 'freelance',
-  E, // 'student',
-  F, // 'unemployed',
 }
 
 export enum ScoringFeatures {
@@ -129,105 +105,105 @@ export const generateConditions = async () => {
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.Gender,
-        scoringFeatureOption: ScoringFeatureGenderTypes.A.toString(),
+        scoringFeatureOption: '0', // Male
         scoring: 7,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.Gender,
-        scoringFeatureOption: ScoringFeatureGenderTypes.B.toString(),
+        scoringFeatureOption: '1', // Female
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.IsEmployed,
-        scoringFeatureOption: ScoringFeatureFlagTypes.Yes.toString(),
+        scoringFeatureOption: '0', // Yes
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.IsEmployed,
-        scoringFeatureOption: ScoringFeatureFlagTypes.No.toString(),
+        scoringFeatureOption: '1', // No
         scoring: 0,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.IsMarried,
-        scoringFeatureOption: ScoringFeatureFlagTypes.Yes.toString(),
+        scoringFeatureOption: '0', // Yes
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.IsMarried,
-        scoringFeatureOption: ScoringFeatureFlagTypes.No.toString(),
+        scoringFeatureOption: '1', // No
         scoring: 2,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.Education,
-        scoringFeatureOption: ScoringFeatureEducationTypes.A.toString(),
+        scoringFeatureOption: '0', // Minimum Secondary
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.Education,
-        scoringFeatureOption: ScoringFeatureEducationTypes.B.toString(),
+        scoringFeatureOption: '1', // General Secondary
         scoring: 2,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.EmploymentType,
-        scoringFeatureOption: ScoringFeatureEmployedTypes.A.toString(),
+        scoringFeatureOption: '0', // Official
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.EmploymentType,
-        scoringFeatureOption: ScoringFeatureEmployedTypes.B.toString(),
+        scoringFeatureOption: '1', // Informal
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.EmploymentType,
-        scoringFeatureOption: ScoringFeatureEmployedTypes.C.toString(),
+        scoringFeatureOption: '2', // Entrepreneur
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.EmploymentType,
-        scoringFeatureOption: ScoringFeatureEmployedTypes.D.toString(),
+        scoringFeatureOption: '3', // Freelance
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.EmploymentType,
-        scoringFeatureOption: ScoringFeatureEmployedTypes.E.toString(),
+        scoringFeatureOption: '4', // Student
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.EmploymentType,
-        scoringFeatureOption: ScoringFeatureEmployedTypes.F.toString(),
+        scoringFeatureOption: '5', // Unemployed
         scoring: 0,
       },
       {
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.MonthlyIncome,
-        scoringFeatureOption: 'lte 140',
+        scoringFeatureOption: '<= 140',
         scoring: 2,
       },
       { 
@@ -241,42 +217,42 @@ export const generateConditions = async () => {
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.MonthlyIncome,
-        scoringFeatureOption: 'gte 200.01',
+        scoringFeatureOption: '>= 200.01',
         scoring: 7,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.HasActiveLoans,
-        scoringFeatureOption: ScoringFeatureFlagTypes.Yes.toString(),
+        scoringFeatureOption: '0', // Yes
         scoring: 0,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.HasActiveLoans,
-        scoringFeatureOption: ScoringFeatureFlagTypes.No.toString(),
+        scoringFeatureOption: '1', // No
         scoring: 2,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.HasCryptoWallets,
-        scoringFeatureOption: ScoringFeatureFlagTypes.Yes.toString(),
+        scoringFeatureOption: '0', // Yes
         scoring: 2,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.HasCryptoWallets,
-        scoringFeatureOption: ScoringFeatureFlagTypes.No.toString(),
+        scoringFeatureOption: '1', // No
         scoring: 0,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.CryptoUsageDuration,
-        scoringFeatureOption: 'lte 6',
+        scoringFeatureOption: '<= 6',
         scoring: 0,
       },
       { 
@@ -290,14 +266,14 @@ export const generateConditions = async () => {
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.CryptoUsageDuration,
-        scoringFeatureOption: 'gt 12',
+        scoringFeatureOption: '> 12',
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.NumberOfChildren,
-        scoringFeatureOption: 'eq 0',
+        scoringFeatureOption: '= 0',
         scoring: 5,
       },
       { 
@@ -311,21 +287,21 @@ export const generateConditions = async () => {
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.NumberOfChildren,
-        scoringFeatureOption: 'gt 3',
+        scoringFeatureOption: '> 3',
         scoring: 2,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.SavingsAfterExpenses,
-        scoringFeatureOption: 'eq 0',
+        scoringFeatureOption: '= 0',
         scoring: 0,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.SavingsAfterExpenses,
-        scoringFeatureOption: 'lte 50',
+        scoringFeatureOption: '<= 50',
         scoring: 2,
       },
       { 
@@ -339,28 +315,28 @@ export const generateConditions = async () => {
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.SavingsAfterExpenses,
-        scoringFeatureOption: 'gt 100',
+        scoringFeatureOption: '> 100',
         scoring: 7,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.HasBankAccounts,
-        scoringFeatureOption: ScoringFeatureFlagTypes.Yes.toString(),
+        scoringFeatureOption: '0', // Yes
         scoring: 2,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.HasBankAccounts,
-        scoringFeatureOption: ScoringFeatureFlagTypes.No.toString(),
+        scoringFeatureOption: '1', // No
         scoring: 0,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.BankAccountBalance,
-        scoringFeatureOption: 'eq 0',
+        scoringFeatureOption: '= 0',
         scoring: 0,
       },
       { 
@@ -388,28 +364,28 @@ export const generateConditions = async () => {
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.BankAccountBalance,
-        scoringFeatureOption: 'gt 200',
+        scoringFeatureOption: '> 200',
         scoring: 10,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.HasUtilityDebt,
-        scoringFeatureOption: ScoringFeatureFlagTypes.Yes.toString(),
+        scoringFeatureOption: '0', // Yes
         scoring: -10,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.HasUtilityDebt,
-        scoringFeatureOption: ScoringFeatureFlagTypes.No.toString(),
+        scoringFeatureOption: '1', // No
         scoring: 5,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.SmsIncomeDetected,
-        scoringFeatureOption: 'eq 0',
+        scoringFeatureOption: '= 0',
         scoring: 0,
       },
       { 
@@ -430,203 +406,203 @@ export const generateConditions = async () => {
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.SmsIncomeDetected,
-        scoringFeatureOption: 'gt 100.01',
+        scoringFeatureOption: '> 100.01',
         scoring: 10,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.SmsOverdueDetectedLast30Days,
-        scoringFeatureOption: ScoringFeatureFlagTypes.Yes.toString(),
+        scoringFeatureOption: '0', // Yes
         scoring: -10,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Social,
         scoringFeature: ScoringFeatures.SmsOverdueDetectedLast30Days,
-        scoringFeatureOption: ScoringFeatureFlagTypes.No.toString(),
+        scoringFeatureOption: '1', // No
         scoring: 0,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByClientPhone,
-        scoringFeatureOption: 'eq 0',
+        scoringFeatureOption: '= 0',
         scoring: 10,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByClientPhone,
-        scoringFeatureOption: 'lte 15',
+        scoringFeatureOption: '<= 15',
         scoring: 7,
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByClientPhone,
-        scoringFeatureOption: 'lte 30',
+        scoringFeatureOption: '<= 30',
         scoring: 5
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByClientPhone,
-        scoringFeatureOption: 'lte 45',
+        scoringFeatureOption: '<= 45',
         scoring: 2
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByClientPhone,
-        scoringFeatureOption: 'gt 45',
+        scoringFeatureOption: '> 45',
         scoring: -5
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.ZodiacCompletionTime,
-        scoringFeatureOption: 'lt 15',
+        scoringFeatureOption: '< 15',
         scoring: 5
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.ZodiacCompletionTime,
-        scoringFeatureOption: 'gt 15',
+        scoringFeatureOption: '> 15',
         scoring: -2
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByClientPhoneDuplicate,
-        scoringFeatureOption: 'eq 0',
+        scoringFeatureOption: '= 0',
         scoring: 10
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByClientPhoneDuplicate,
-        scoringFeatureOption: 'lte 15',
+        scoringFeatureOption: '<= 15',
         scoring: 7
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByClientPhoneDuplicate,
-        scoringFeatureOption: 'lte 30',
+        scoringFeatureOption: '<= 30',
         scoring: 5
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByClientPhoneDuplicate,
-        scoringFeatureOption: 'lte 45',
+        scoringFeatureOption: '<= 45',
         scoring: 2
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByClientPhoneDuplicate,
-        scoringFeatureOption: 'gt 45',
+        scoringFeatureOption: '> 45',
         scoring: -5
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByContactPhoneBorrowers,
-        scoringFeatureOption: 'eq 0',
+        scoringFeatureOption: '= 0',
         scoring: 10
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByContactPhoneBorrowers,
-        scoringFeatureOption: 'lte 15',
+        scoringFeatureOption: '<= 15',
         scoring: 7
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByContactPhoneBorrowers,
-        scoringFeatureOption: 'lte 30',
+        scoringFeatureOption: '<= 30',
         scoring: 5
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByContactPhoneBorrowers,
-        scoringFeatureOption: 'lte 45',
+        scoringFeatureOption: '<= 45',
         scoring: 2
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByContactPhoneBorrowers,
-        scoringFeatureOption: 'gt 45',
+        scoringFeatureOption: '> 45',
         scoring: 0
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByContactPhoneContacts,
-        scoringFeatureOption: 'eq 0',
+        scoringFeatureOption: '= 0',
         scoring: 10
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByContactPhoneContacts,
-        scoringFeatureOption: 'lte 15',
+        scoringFeatureOption: '<= 15',
         scoring: 7
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByContactPhoneContacts,
-        scoringFeatureOption: 'lte 30',
+        scoringFeatureOption: '<= 30',
         scoring: 5
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByContactPhoneContacts,
-        scoringFeatureOption: 'lte 45',
+        scoringFeatureOption: '<= 45',
         scoring: 2
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.PaidLoansByContactPhoneContacts,
-        scoringFeatureOption: 'gt 45',
+        scoringFeatureOption: '> 45',
         scoring: -5
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.NumberOfPaidLoansInCompany,
-        scoringFeatureOption: 'eq 0',
+        scoringFeatureOption: '= 0',
         scoring: 0
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.NumberOfPaidLoansInCompany,
-        scoringFeatureOption: 'eq 1',
+        scoringFeatureOption: '= 1',
         scoring: 5
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.NumberOfPaidLoansInCompany,
-        scoringFeatureOption: 'eq 2',
+        scoringFeatureOption: '= 2',
         scoring: 7
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.NumberOfPaidLoansInCompany,
-        scoringFeatureOption: 'eq 3',
+        scoringFeatureOption: '= 3',
         scoring: 10
       },
       { 
@@ -640,14 +616,14 @@ export const generateConditions = async () => {
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.NumberOfPaidLoansInCompany,
-        scoringFeatureOption: 'gt 5',
+        scoringFeatureOption: '> 5',
         scoring: 25
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.QualityOfPaidLoansMax,
-        scoringFeatureOption: 'gt 60',
+        scoringFeatureOption: '> 60',
         scoring: -25
       },
       { 
@@ -682,14 +658,14 @@ export const generateConditions = async () => {
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.QualityOfPaidLoansMax,
-        scoringFeatureOption: 'eq 0',
+        scoringFeatureOption: '= 0',
         scoring: 25
       },
       { 
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.QualityOfPaidLoansLast,
-        scoringFeatureOption: 'gt 0',
+        scoringFeatureOption: '> 0',
         scoring: -25
       },
       { 
@@ -724,7 +700,7 @@ export const generateConditions = async () => {
         applicationId,
         scoringType: ScoringTypes.Behavioral,
         scoringFeature: ScoringFeatures.QualityOfPaidLoansLast,
-        scoringFeatureOption: 'eq 0',
+        scoringFeatureOption: '= 0',
         scoring: 25
       },
     ]);

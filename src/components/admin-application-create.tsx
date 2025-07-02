@@ -44,7 +44,11 @@ export const AdminApplicationCreate: FC = memo(() => {
   const toolbar = <CreateToolbar />;
 
   return (
-    <Create>
+    <Create sx={{
+      '& .RaCreate-main': {
+        marginTop: 1,
+      }
+    }}>
       <SimpleForm toolbar={toolbar} sx={{
         paddingBottom: 0,
       }}>

@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from "next/server";
-import { count, desc, asc, or, SQL } from "drizzle-orm";
+import { count, desc, asc, SQL, ilike, and } from "drizzle-orm";
 import { PgColumn } from "drizzle-orm/pg-core";
 import { db } from "../../../../db";
 import { conditions } from "../../../../db/schema";
@@ -33,18 +33,20 @@ export const GET = async (request: NextRequest) => {
       return new NextResponse('Forbidden', { status: 403 });
     }
 
-    const [limit, offset, orderBy] = searchParams(request);
+    const [limit, offset, where, orderBy] = searchParams(request);
 
     const rows = await db
       .select()
       .from(conditions)
+      .where(where)
       .orderBy(orderBy)
       .limit(limit)
       .offset(offset);
 
     const rowsCount = await db
       .select({ count: count() })
-      .from(conditions);
+      .from(conditions)
+      .where(where);
 
     const totalCount = rowsCount[0].count.toString();
     const contentRange = `conditions ${offset}-${limit - 1}/${totalCount}`
@@ -69,7 +71,7 @@ const FIELDS: Record<any, PgColumn<any>> = {
 const DEFAULT_SORT = ["updatedAt", "DESC"];
 const DEFAULT_RANGE = [0, 9];
 
-const searchParams = (request: NextRequest): [number, number, SQL<unknown>] => {
+const searchParams = (request: NextRequest): [number, number, SQL<unknown> | undefined, SQL<unknown>] => {
   const { searchParams } = new URL(request.url);
 
   const range = searchParams.get("range");
@@ -84,5 +86,13 @@ const searchParams = (request: NextRequest): [number, number, SQL<unknown>] => {
   const sortOrderByFn = sortB === "ASC" ? asc : desc;
   const sortOrderBy = sortOrderByFn(FIELDS[sortA] || conditions.updatedAt);
 
-  return [rangeLimit, rangeOffset, sortOrderBy];
+  const where = [];
+
+  const filter = searchParams.get("filter");
+  const filters = filter ? JSON.parse(filter) : {};
+  if ('q' in filters) {
+    where.push(ilike(conditions.scoringFeature,  `${filters.q}%`))
+  }
+
+  return [rangeLimit, rangeOffset, and(...where), sortOrderBy];
 }

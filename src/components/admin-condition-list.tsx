@@ -81,7 +81,7 @@ export const AdminConditionList: FC = memo(() => {
       '& .RaList-actions': {
         alignItems: 'center',
       },
-       '& .RaList-actions form': {
+      '& .RaList-actions form': {
         minHeight: 'auto',
       }
     }}>
