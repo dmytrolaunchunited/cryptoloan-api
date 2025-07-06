@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { count, desc,asc, SQL, and, ilike, sql } from "drizzle-orm";
 import { PgColumn } from "drizzle-orm/pg-core";
-import { applications, scoringQuestions, scoringQuestionsToScoringFeatures } from "../../../../db/schema";
+import { applications, scoringPayouts } from "../../../../db/schema";
 import { db } from "../../../../db";
 
 /**
  * @swagger
- * /api/admin/scoring-questions:
+ * /api/admin/scoring-payouts:
  *   get:
- *     summary: Find scoring questions
+ *     summary: Find scoring payouts
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
@@ -37,28 +37,23 @@ export const GET = async (request: NextRequest) => {
 
     const rows = await db
       .select({
-        id: scoringQuestions.id,
-        name: scoringQuestions.name,
-        description: scoringQuestions.description,
-        isActive: scoringQuestions.isActive,
-        createdAt: scoringQuestions.createdAt,
-        updatedAt: scoringQuestions.updatedAt,
+        id: scoringPayouts.id,
+        name: scoringPayouts.name,
+        description: scoringPayouts.description,
+        condition: scoringPayouts.condition,
+        value: scoringPayouts.value,
+        isActive: scoringPayouts.isActive,
+        createdAt: scoringPayouts.createdAt,
+        updatedAt: scoringPayouts.updatedAt,
         application: sql`
           (
             SELECT row_to_json(${applications})
             FROM ${applications}
-            WHERE ${applications.id} = ${scoringQuestions.applicationId}
+            WHERE ${applications.id} = ${scoringPayouts.applicationId}
           )
         `.as('application'),
-        scoringFeatures: sql`
-          (
-            SELECT json_agg(${scoringQuestionsToScoringFeatures.scoringFeatureId})
-            FROM ${scoringQuestionsToScoringFeatures}
-            WHERE ${scoringQuestionsToScoringFeatures.scoringQuestionId} = ${scoringQuestions.id}
-          )
-        `.as('scoringFeatures'),
       })
-      .from(scoringQuestions)
+      .from(scoringPayouts)
       .where(where)
       .orderBy(orderBy)
       .limit(limit)
@@ -66,11 +61,11 @@ export const GET = async (request: NextRequest) => {
 
     const rowsCount = await db
       .select({ count: count() })
-      .from(scoringQuestions)
+      .from(scoringPayouts)
       .where(where);
 
     const totalCount = rowsCount[0].count.toString();
-    const contentRange = `scoring-questions ${offset}-${limit - 1}/${totalCount}`
+    const contentRange = `scoring-payouts ${offset}-${limit - 1}/${totalCount}`
     const response = NextResponse.json(rows, { status: 200 });
       
     response.headers.set('Content-Range', contentRange);
@@ -79,14 +74,14 @@ export const GET = async (request: NextRequest) => {
 
     return response;
   } catch (error) {
-    console.error('[API][GET][Admin][scoring-questions]', error);
+    console.error('[API][GET][Admin][scoring-payouts]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }
 
 const FIELDS: Record<any, PgColumn<any>> = {
-  id: scoringQuestions.id,
-  updatedAt: scoringQuestions.updatedAt,
+  id: scoringPayouts.id,
+  updatedAt: scoringPayouts.updatedAt,
 };
 
 const DEFAULT_SORT = ["updatedAt", "DESC"];
@@ -105,14 +100,14 @@ const searchParams = (request: NextRequest): [number, number, SQL<unknown> | und
   const [sortA, sortB] = sort ? JSON.parse(sort) : DEFAULT_SORT;
 
   const sortOrderByFn = sortB === "ASC" ? asc : desc;
-  const sortOrderBy = sortOrderByFn(FIELDS[sortA] || scoringQuestions.updatedAt);
+  const sortOrderBy = sortOrderByFn(FIELDS[sortA] || scoringPayouts.updatedAt);
 
   const where = [];
 
   const filter = searchParams.get("filter");
   const filters = filter ? JSON.parse(filter) : {};
   if ('q' in filters) {
-    where.push(ilike(scoringQuestions.name,  `${filters.q}%`))
+    where.push(ilike(scoringPayouts.name,  `${filters.q}%`))
   }
   
   return [rangeLimit, rangeOffset, and(...where), sortOrderBy];
@@ -120,9 +115,9 @@ const searchParams = (request: NextRequest): [number, number, SQL<unknown> | und
 
 /**
  * @swagger
- * /api/admin/scoring-questions:
+ * /api/admin/scoring-payouts:
  *   post:
- *     summary: Create scoring question
+ *     summary: Create scoring payout
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
@@ -150,24 +145,12 @@ export const POST = async (request: NextRequest) => {
     const data = await request.json();
 
     const rows = await db
-      .insert(scoringQuestions)
-      .values(data).returning({ id: scoringQuestions.id });
-
-    const row = rows[0];
-    const scoringQuestionId = row.id;
-
-    const dataRelations = data.scoringFeatures.map((scoringFeatureId: number) => ({
-      scoringFeatureId,
-      scoringQuestionId,
-    }));
-
-    await db
-      .insert(scoringQuestionsToScoringFeatures)
-      .values(dataRelations);
+      .insert(scoringPayouts)
+      .values(data).returning({ id: scoringPayouts.id });
 
     return NextResponse.json(rows[0], { status: 201 });
   } catch (error) {
-    console.error('[API][POST][Admin][scoring-questions][:id]', error);
+    console.error('[API][POST][Admin][scoring-payouts][:id]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }

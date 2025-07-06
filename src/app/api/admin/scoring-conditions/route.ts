@@ -49,7 +49,7 @@ export const GET = async (request: NextRequest) => {
       .where(where);
 
     const totalCount = rowsCount[0].count.toString();
-    const contentRange = `scoring-features ${offset}-${limit - 1}/${totalCount}`
+    const contentRange = `scoring-conditions ${offset}-${limit - 1}/${totalCount}`
     const response = NextResponse.json(rows, { status: 200 });
       
     response.headers.set('Content-Range', contentRange);
@@ -58,7 +58,7 @@ export const GET = async (request: NextRequest) => {
 
     return response;
   } catch (error) {
-    console.error('[API][GET][Admin][scoring-features]', error);
+    console.error('[API][GET][Admin][scoring-conditions]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }

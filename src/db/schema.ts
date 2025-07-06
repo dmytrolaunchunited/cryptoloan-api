@@ -152,3 +152,28 @@ export const applications = pgTable('applications', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
+
+export const scoringPayouts = pgTable("scoring_payouts", {
+  id: serial('id').primaryKey(),
+  applicationId: integer('application_id').references(() => applications.id),
+  name: varchar(),
+  description: varchar(),
+  condition: varchar(),
+  value: varchar(),
+  isActive: boolean('is_active').default(true),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+
+// <10
+// >125
+
+// // Бал	Сума
+// // до 10	відмова
+// // 11-20	10
+// // 21-40	25
+// // 41-70	50
+// // 71-100	100
+// // 101-125	100
+// // 126+	100

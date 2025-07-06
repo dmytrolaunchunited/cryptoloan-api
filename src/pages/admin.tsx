@@ -26,6 +26,9 @@ import { AdminApplicationCreate } from "../components/admin-application-create";
 import { AdminUserProfileEdit } from "../components/admin-user-profile-edit";
 import { AdminUserProfileList } from "../components/admin-user-profile-list";
 import { AdminUserDeviceList } from "../components/admin-user-device-list";
+import { AdminScoringPayoutList } from "../components/admin-scoring-payout-list";
+import { AdminScoringPayoutEdit } from "../components/admin-scoring-payout-edit";
+import { AdminScoringPayoutCreate } from "../components/admin-scoring-payout-create";
 
 interface CheckError {
   status: number;
@@ -98,6 +101,17 @@ const App = memo(() => {
         recordRepresentation="id"
       />
       <Resource
+        name="scoring-payouts"
+        icon={Description}
+        list={AdminScoringPayoutList}
+        edit={AdminScoringPayoutEdit}
+        create={AdminScoringPayoutCreate}
+        options={{
+          label: "Scoring Payouts"
+        }}
+        recordRepresentation="id"
+      />
+      <Resource
         name="scoring-conditions"
         icon={Description}
         list={AdminScoringConditionList}
@@ -108,7 +122,7 @@ const App = memo(() => {
         }}
         recordRepresentation="id"
       />
-       <Resource
+      <Resource
         name="scoring-features"
         icon={Description}
         list={AdminScoringFeatureList}
