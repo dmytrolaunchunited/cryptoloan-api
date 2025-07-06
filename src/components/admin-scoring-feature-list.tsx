@@ -88,7 +88,7 @@ export const AdminScoringFeatureList: FC = memo(() => {
         <DateField
           label="UPDATED AT"
           source="updatedAt" showTime showDate />
-        <WrapperField label="ACTIONS" source="createdAt" textAlign="right" sortable={false}>
+        <WrapperField label="ACTIONS" textAlign="right" sortable={false}>
           <EditButton sx={{
             '&.MuiButtonBase-root': {
               padding: 1,

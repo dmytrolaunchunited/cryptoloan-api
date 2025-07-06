@@ -65,7 +65,7 @@ export const POST = async (request: NextRequest, context: any) => {
         .insert(userDevices)
         .values({ ...data, userId });
     }
-    new NextResponse(null, { status: 204 });
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error('[API][POST][users][:id][devices]', error);
     return new NextResponse('Bad Request', { status: 400 });

@@ -47,12 +47,14 @@ export const GET = async (request: NextRequest, context: any) => {
     const applicationRow = applicationRows[0];
     const applicationId = applicationRow.id;
 
-    const data = await request.json();
+    const { searchParams } = new URL(request.url);
+
+    const privy = searchParams.get("privy");
 
     const rows = await db
       .select()
       .from(users)
-      .where(and(eq(users.privy, data.privy), eq(users.applicationId, applicationId)))
+      .where(and(eq(users.privy, privy!), eq(users.applicationId, applicationId)))
       .limit(1);
 
     return NextResponse.json(rows[0], { status: 200 });
@@ -66,7 +68,7 @@ export const GET = async (request: NextRequest, context: any) => {
  * @swagger
  * /api/users:
  *   post:
- *     summary: Upsert user
+ *     summary: Upsert privy user
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:

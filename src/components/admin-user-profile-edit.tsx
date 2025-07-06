@@ -1,13 +1,13 @@
 import { Close, Done } from "@mui/icons-material";
 import { FC, memo, useCallback, useMemo } from "react";
 
-import { Button, Edit, required, ReferenceInput, SaveButton, SimpleForm, TextInput, Toolbar, useRedirect, AutocompleteInput } from "react-admin";
+import { Button, Edit, SaveButton, SimpleForm, TextInput, Toolbar, useRedirect, DateInput } from "react-admin";
 
 const EditToolbar: FC = memo(() => {
   const redirect = useRedirect();
   
   const onClickCancel = useMemo(() => () => {
-    redirect('/users');
+    redirect('/user-profiles');
   }, [redirect]);
 
   return (
@@ -41,13 +41,13 @@ const EditToolbar: FC = memo(() => {
   );
 });
 
-export const AdminUserEdit: FC = memo(() => {
+export const AdminUserProfileEdit: FC = memo(() => {
   const redirect = useRedirect();
 
   const toolbar = <EditToolbar />;
 
   const onSuccess = useCallback(() => {
-    redirect(`/users`);
+    redirect(`/user-profiles`);
   }, [redirect]);
 
   const transform = useCallback((data: any) => {
@@ -66,12 +66,12 @@ export const AdminUserEdit: FC = memo(() => {
         paddingBottom: 0,
       }}>
         <TextInput disabled size="small" source="id" />
-        <TextInput disabled size="small" source="privy" />
-        <TextInput size="small" source="phone" />
-        <TextInput size="small" source="email" />
-        <ReferenceInput source="applicationId" reference="applications">
-          <AutocompleteInput size="small" validate={required()} optionText={(i) => i.name.toUpperCase()} />
-        </ReferenceInput>
+        <TextInput size="small" source="firstName" />
+        <TextInput size="small" source="lastName" />
+        <TextInput size="small" source="citizenshipCountry" />
+        <TextInput size="small" source="residenceCountry" />
+
+        <DateInput size="small" source="dateOfBirth" />
       </SimpleForm>
     </Edit>
   );

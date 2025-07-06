@@ -22,7 +22,7 @@ import { eq, and } from "drizzle-orm";
  *       200:
  *         description: success
  */
-export const GET = async (request: NextRequest, { params }: any) => {
+export const GET = async (request: NextRequest, context: any) => {
   try {
     const apiKey = request.headers.get('X-API-KEY');
     if (!apiKey) {
@@ -38,7 +38,7 @@ export const GET = async (request: NextRequest, { params }: any) => {
     if (!applicationRows.length) {
       return new NextResponse('Forbidden', { status: 403 });
     }
-
+    const params = await context.params;
     const id = Number(params.id);
     const rows = await db
       .select()

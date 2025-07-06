@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { count, desc, asc, SQL, sql, ilike, and, or } from "drizzle-orm";
-import { applications, users } from "../../../../db/schema";
+import { count, desc, asc, SQL, ilike, and, or } from "drizzle-orm";
+import { userDevices } from "../../../../db/schema";
 import { db } from "../../../../db";
 import { PgColumn } from "drizzle-orm/pg-core";
 
 /**
  * @swagger
- * /api/admin/users:
+ * /api/admin/user-devices:
  *   get:
- *     summary: Find users
+ *     summary: Find user devices
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
@@ -36,22 +36,8 @@ export const GET = async (request: NextRequest) => {
     const [limit, offset, where, orderBy] = searchParams(request);
 
     const rows = await db
-      .select({
-        id: users.id,
-        privy: users.privy,
-        phone: users.phone,
-        email: users.email,
-        createdAt: users.createdAt,
-        updatedAt: users.updatedAt,
-        application: sql`
-          (
-            SELECT row_to_json(${applications})
-            FROM ${applications}
-            WHERE ${applications.id} = ${users.applicationId}
-          )
-        `.as('application'),
-      })
-      .from(users)
+      .select()
+      .from(userDevices)
       .where(where)
       .orderBy(orderBy)
       .limit(limit)
@@ -59,11 +45,11 @@ export const GET = async (request: NextRequest) => {
 
     const rowsCount = await db
       .select({ count: count() })
-      .from(users)
+      .from(userDevices)
       .where(where);
 
     const totalCount = rowsCount[0].count.toString();
-    const contentRange = `users ${offset}-${limit - 1}/${totalCount}`
+    const contentRange = `user-devices ${offset}-${limit - 1}/${totalCount}`
     const response = NextResponse.json(rows, { status: 200 });
       
     response.headers.set('Content-Range', contentRange);
@@ -72,17 +58,17 @@ export const GET = async (request: NextRequest) => {
 
     return response;
   } catch (error) {
-    console.error('[API][GET][Admin][users]', error);
+    console.error('[API][GET][Admin][user-devices]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }
 
 const FIELDS: Record<any, PgColumn<any>> = {
-  id: users.id,
-  updatedAt: users.updatedAt,
+  id: userDevices.id,
+  createdAt: userDevices.createdAt,
 };
 
-const DEFAULT_SORT = ["updatedAt", "DESC"];
+const DEFAULT_SORT = ["createdAt", "DESC"];
 const DEFAULT_RANGE = [0, 9];
 
 const searchParams = (request: NextRequest): [number, number, SQL<unknown> | undefined, SQL<unknown>] => {
@@ -98,7 +84,7 @@ const searchParams = (request: NextRequest): [number, number, SQL<unknown> | und
   const [sortA, sortB] = sort ? JSON.parse(sort) : DEFAULT_SORT;
 
   const sortOrderByFn = sortB === "ASC" ? asc : desc;
-  const sortOrderBy = sortOrderByFn(FIELDS[sortA] || users.updatedAt);
+  const sortOrderBy = sortOrderByFn(FIELDS[sortA] || userDevices.createdAt);
 
   const where = [];
 
@@ -106,8 +92,8 @@ const searchParams = (request: NextRequest): [number, number, SQL<unknown> | und
   const filters = filter ? JSON.parse(filter) : {};
   if ('q' in filters) {
     where.push(or(
-      ilike(users.email,  `${filters.q}%`),
-      ilike(users.phone,  `${filters.q}%`),
+      ilike(userDevices.model,  `${filters.q}%`),
+      ilike(userDevices.name,  `${filters.q}%`),
     ));
   }
   

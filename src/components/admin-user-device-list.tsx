@@ -1,6 +1,5 @@
 import { FC, memo } from "react";
-import { BooleanField, CreateButton, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, List, SearchInput, SelectColumnsButton, TextField, TopToolbar, WrapperField } from "react-admin";
-import { Chip } from '@mui/material';
+import { Button, DatagridConfigurable, DateField, DeleteButton, ExportButton, FunctionField, Link, List, SearchInput, SelectColumnsButton, TextField, TopToolbar, useRecordContext, WrapperField } from "react-admin";
 import { AdminEmpty } from "./admin-empty";
 
 const filters = [
@@ -14,14 +13,7 @@ const filters = [
 const Actions: FC = memo(() => {
   return (
     <TopToolbar>
-      <SelectColumnsButton preferenceKey="application.table" sx={{
-        '&.MuiButtonBase-root': {
-          padding: 1,
-          borderRadius: 18,
-          paddingX: 2,
-        }
-      }} />
-      <CreateButton sx={{
+      <SelectColumnsButton preferenceKey="user.table" sx={{
         '&.MuiButtonBase-root': {
           padding: 1,
           borderRadius: 18,
@@ -39,10 +31,41 @@ const Actions: FC = memo(() => {
   );
 });
 
-export const AdminApplicationList: FC = memo(() => {
+const UserButton: FC = memo(() => {
+  const i = useRecordContext();
+  return (
+    <Button
+      component={Link}
+      to={`/users/${i?.id}`}
+      sx={{
+        '& .MuiButton-icon': {
+          margin: 0,
+        },
+        '&.MuiButtonBase-root': {
+          padding: 1,
+          borderRadius: 18,
+          paddingX: 2,
+        }
+      }}
+    >
+      USER
+    </Button>
+  );
+});
+
+enum DeviceTypes {
+  UNKNOWN,
+  PHONE,
+  TABLET,
+  TV,
+  DESKTOP,
+}
+
+export const AdminUserDeviceList: FC = memo(() => {
   const actions = <Actions />;
   const empty = <AdminEmpty />;
 
+  // console.log(searchParams)
   return (
     <List filters={filters} empty={empty} actions={actions} emptyWhileLoading sx={{
       '& .RaList-actions': {
@@ -52,30 +75,19 @@ export const AdminApplicationList: FC = memo(() => {
         minHeight: 'auto',
       }
     }}>
-      <DatagridConfigurable
-        preferenceKey="application.table"
-      >
-        <TextField
-          source="id"
-          label="ID"
-        />
-        <FunctionField label="NAME" render={i => (
-          <Chip label={i.name.toUpperCase()}/>
-        )} />
+      <DatagridConfigurable preferenceKey="user.table" rowClick={false}>
+        <TextField source="id" label="ID" />
+        <TextField source="name" label="NAME" />
+        <TextField source="model" label="MODEL" />
+        <FunctionField label="TYPE" render={i => DeviceTypes[i.type]} />
 
-        <BooleanField label="ACTIVE" source="isActive" />
+        <TextField source="manufacturer" label="MANUFACTURE" />
+        <TextField source="ipAddress" label="IP ADDRESS" />
 
-        <DateField
-          label="UPDATED AT"
-          source="updatedAt" showTime showDate />
+        <DateField label="CREATED AT" source="createdAt" showTime showDate />
+
         <WrapperField label="ACTIONS" textAlign="right" sortable={false}>
-          <EditButton sx={{
-            '&.MuiButtonBase-root': {
-              padding: 1,
-              borderRadius: 18,
-              paddingX: 2,
-            }
-          }}/>
+          <UserButton />
           <DeleteButton sx={{
             '&.MuiButtonBase-root': {
               padding: 1,

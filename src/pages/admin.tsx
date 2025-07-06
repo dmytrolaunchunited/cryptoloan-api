@@ -23,6 +23,9 @@ import { AdminScoringQuestionEdit } from "../components/admin-scoring-question-e
 import { AdminApplicationList } from "../components/admin-application-list";
 import { AdminApplicationEdit } from "../components/admin-application-edit";
 import { AdminApplicationCreate } from "../components/admin-application-create";
+import { AdminUserProfileEdit } from "../components/admin-user-profile-edit";
+import { AdminUserProfileList } from "../components/admin-user-profile-list";
+import { AdminUserDeviceList } from "../components/admin-user-device-list";
 
 interface CheckError {
   status: number;
@@ -132,6 +135,25 @@ const App = memo(() => {
         icon={Description}
         list={AdminUserList}
         edit={AdminUserEdit}
+        recordRepresentation="id"
+      />
+      <Resource
+        name="user-profiles"
+        icon={Description}
+        list={AdminUserProfileList}
+        edit={AdminUserProfileEdit}
+        options={{
+          label: "User Profiles"
+        }}
+        recordRepresentation="id"
+      />
+      <Resource
+        name="user-devices"
+        icon={Description}
+        list={AdminUserDeviceList}
+        options={{
+          label: "User Devices"
+        }}
         recordRepresentation="id"
       />
     </Admin>

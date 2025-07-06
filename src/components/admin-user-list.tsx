@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { CreateButton, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, List, ReferenceField, SearchInput, SelectColumnsButton, TextField, TopToolbar, WrapperField } from "react-admin";
+import { DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, List, SearchInput, SelectColumnsButton, TextField, TopToolbar, WrapperField } from "react-admin";
 import { Chip } from '@mui/material';
 import { AdminEmpty } from "./admin-empty";
 
@@ -45,8 +45,11 @@ export const AdminUserList: FC = memo(() => {
         minHeight: 'auto',
       }
     }}>
-      <DatagridConfigurable preferenceKey="user.table">
+      <DatagridConfigurable preferenceKey="user.table" rowClick={false}>
         <TextField source="id" label="ID" />
+
+        <TextField source="phone" label="PHONE" />
+        <TextField source="email" label="EMAIL" />
 
         <FunctionField label="PRIVY ID" render={i => {
           const visible = i.privy.slice(-5);
@@ -62,7 +65,7 @@ export const AdminUserList: FC = memo(() => {
 
         <DateField label="UPDATED AT" source="updatedAt" showTime showDate />
 
-        <WrapperField label="ACTIONS" source="createdAt" textAlign="right" sortable={false}>
+        <WrapperField label="ACTIONS" textAlign="right" sortable={false}>
           <EditButton sx={{
             '&.MuiButtonBase-root': {
               padding: 1,
