@@ -1,17 +1,23 @@
-import { db } from "../../../../db";
-import { applications, users } from "../../../../db/schema";
+import { db } from "../../../../../db";
+import { applications, userDevices } from "../../../../../db/schema";
 import { NextResponse, NextRequest } from "next/server";
 import { eq, and } from "drizzle-orm";
 
 /**
  * @swagger
- * /api/users/{id}:
- *   get:
- *     summary: Find user
+ * /api/users/{id}/devices:
+ *   post:
+ *     summary: Create user device
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
  *       - user
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           example:
+ *             ipAddress: '192.168.1.1'
+ *             firstName: 'Test'
  *     responses:
  *       400:
  *         description: bad request
@@ -22,7 +28,7 @@ import { eq, and } from "drizzle-orm";
  *       200:
  *         description: success
  */
-export const GET = async (request: NextRequest, context: any) => {
+export const POST = async (request: NextRequest, context: any) => {
   try {
     const apiKey = request.headers.get('X-API-KEY');
     if (!apiKey) {
@@ -39,21 +45,29 @@ export const GET = async (request: NextRequest, context: any) => {
       return new NextResponse('Forbidden', { status: 403 });
     }
 
-    const applicationRow = applicationRows[0];
-    const applicationId = applicationRow.id;
-
     const params = await context.params;
-    const id = Number(params.id);
-  
+    const userId = params.id;
+
+    const data = await request.json();
+
     const rows = await db
       .select()
-      .from(users)
-      .where(and(eq(users.id, id), eq(users.applicationId, applicationId)))
+      .from(userDevices)
+      .where(and(
+        eq(userDevices.userId, userId),
+        eq(userDevices.model, data.model),
+        eq(userDevices.ipAddress, data.ipAddress),
+      ))
       .limit(1);
-
-    return NextResponse.json(rows[0], { status: 200 });
+  
+    if (!rows.length) {
+      await db
+        .insert(userDevices)
+        .values({ ...data, userId });
+    }
+    new NextResponse(null, { status: 204 });
   } catch (error) {
-    console.error('[API][GET][users][:id]', error);
+    console.error('[API][POST][users][:id][devices]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }

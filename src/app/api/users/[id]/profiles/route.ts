@@ -1,22 +1,17 @@
+import { db } from "../../../../../db";
+import { applications, userProfiles } from "../../../../../db/schema";
 import { NextResponse, NextRequest } from "next/server";
 import { eq, and } from "drizzle-orm";
-import { db } from "../../../db";
-import { applications, users } from "../../../db/schema";
 
 /**
  * @swagger
- * /api/users:
+ * /api/users/{id}/profiles:
  *   get:
- *     summary: Find privy user
+ *     summary: Find user profile
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
  *       - user
- *     requestBody:
- *       content:
- *         application/json:
- *           example:
- *             privy: cmcch0i1t01cel50nj19qd2eo
  *     responses:
  *       400:
  *         description: bad request
@@ -27,7 +22,7 @@ import { applications, users } from "../../../db/schema";
  *       200:
  *         description: success
  */
-export const GET = async (request: NextRequest, context: any) => {
+export const GET = async (request: NextRequest, { params }: any) => {
   try {
     const apiKey = request.headers.get('X-API-KEY');
     if (!apiKey) {
@@ -44,29 +39,25 @@ export const GET = async (request: NextRequest, context: any) => {
       return new NextResponse('Forbidden', { status: 403 });
     }
 
-    const applicationRow = applicationRows[0];
-    const applicationId = applicationRow.id;
-
-    const data = await request.json();
-
+    const id = Number(params.id);
     const rows = await db
       .select()
-      .from(users)
-      .where(and(eq(users.privy, data.privy), eq(users.applicationId, applicationId)))
+      .from(userProfiles)
+      .where(and(eq(userProfiles.userId, id)))
       .limit(1);
 
     return NextResponse.json(rows[0], { status: 200 });
   } catch (error) {
-    console.error('[API][GET][users][:id]', error);
+    console.error('[API][GET][users][:id][profiles]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }
 
 /**
  * @swagger
- * /api/users:
+ * /api/users/{id}/profiles:
  *   post:
- *     summary: Upsert user
+ *     summary: Upsert user profile
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
@@ -75,7 +66,8 @@ export const GET = async (request: NextRequest, context: any) => {
  *       content:
  *         application/json:
  *           example:
- *             privy: cmcch0i1t01cel50nj19qd2eo
+ *             ipAddress: '192.168.1.1'
+ *             firstName: 'Test'
  *     responses:
  *       400:
  *         description: bad request
@@ -86,7 +78,7 @@ export const GET = async (request: NextRequest, context: any) => {
  *       200:
  *         description: success
  */
-export const POST = async (request: NextRequest) => {
+export const POST = async (request: NextRequest, context: any) => {
   try {
     const apiKey = request.headers.get('X-API-KEY');
     if (!apiKey) {
@@ -103,35 +95,35 @@ export const POST = async (request: NextRequest) => {
       return new NextResponse('Forbidden', { status: 403 });
     }
 
-    const applicationRow = applicationRows[0];
-    const applicationId = applicationRow.id;
+    const params = await context.params;
+    const userId = params.id;
 
     const data = await request.json();
 
-    const userRows = await db
+    const userProfileRows = await db
       .select()
-      .from(users)
-      .where(eq(users.privy, data.privy))
+      .from(userProfiles)
+      .where(eq(userProfiles.userId, userId))
       .limit(1);
   
-    if (userRows.length) {
-      const rows = await db
-        .update(users)
+    if (userProfileRows.length) {
+     const rows = await db
+        .update(userProfiles)
         .set(data)
-        .where(and(eq(users.privy, data.privy), eq(users.applicationId, applicationId)))
-        .returning({ id: users.id });
-
+        .where(eq(userProfiles.userId, userId))
+        .returning({ id: userProfiles.id });
+      
       return NextResponse.json(rows[0], { status: 200 });
     } else {
       const rows = await db
-        .insert(users)
-        .values({ ...data, applicationId })
-        .returning({ id: users.id });
-
+        .insert(userProfiles)
+        .values({ ...data, userId })
+        .returning({ id: userProfiles.id });
+    
       return NextResponse.json(rows[0], { status: 200 });
     }
   } catch (error) {
-    console.error('[API][POST][users]', error);
+    console.error('[API][POST][users][:id][profiles]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }

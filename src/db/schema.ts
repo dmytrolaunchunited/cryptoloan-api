@@ -104,7 +104,6 @@ export const userDevices = pgTable('user_devices', {
   userId: integer('user_id').references(() => users.id),
   type: varchar(),
   name: varchar(),
-  brand: varchar(),
   model: varchar(),
   manufacturer: varchar(),
   ipAddress: varchar('ip_address'),
