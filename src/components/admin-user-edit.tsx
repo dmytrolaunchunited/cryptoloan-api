@@ -1,12 +1,13 @@
 import { Close, Done } from "@mui/icons-material";
 import { FC, memo, useCallback, useMemo } from "react";
-import { BooleanInput, Button, Edit, required, SaveButton, SimpleForm, TextInput, Toolbar, useRedirect } from "react-admin";
+
+import { Button, Edit, required, ReferenceInput, SaveButton, SimpleForm, TextInput, Toolbar, useRedirect, AutocompleteInput } from "react-admin";
 
 const EditToolbar: FC = memo(() => {
   const redirect = useRedirect();
   
   const onClickCancel = useMemo(() => () => {
-    redirect('/applications');
+    redirect('/users');
   }, [redirect]);
 
   return (
@@ -40,13 +41,13 @@ const EditToolbar: FC = memo(() => {
   );
 });
 
-export const AdminApplicationEdit: FC = memo(() => {
+export const AdminUserEdit: FC = memo(() => {
   const redirect = useRedirect();
 
   const toolbar = <EditToolbar />;
 
   const onSuccess = useCallback(() => {
-    redirect(`/applications`);
+    redirect(`/users`);
   }, [redirect]);
 
   const transform = useCallback((data: any) => {
@@ -65,12 +66,11 @@ export const AdminApplicationEdit: FC = memo(() => {
         paddingBottom: 0,
       }}>
         <TextInput disabled size="small" source="id" />
-        <TextInput size="small" source="name" validate={required()} />
-        <TextInput size="small" source="uuid" validate={required()} />
+        <TextInput disabled size="small" source="privy" />
 
-        <BooleanInput size="small" source="isActive" label="Active" defaultValue={true} fullWidth sx={{
-          marginLeft: 1,
-        }}/>
+        <ReferenceInput source="applicationId" reference="applications">
+          <AutocompleteInput size="small" validate={required()} optionText={(i) => i.name.toUpperCase()} />
+        </ReferenceInput>
       </SimpleForm>
     </Edit>
   );

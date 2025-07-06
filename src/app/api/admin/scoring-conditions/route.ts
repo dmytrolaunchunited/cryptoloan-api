@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { count, desc,asc, SQL, and, ilike } from "drizzle-orm";
 import { PgColumn } from "drizzle-orm/pg-core";
-import { applications } from "../../../../db/schema";
+import { scoringConditions } from "../../../../db/schema";
 import { db } from "../../../../db";
 
 /**
  * @swagger
- * /api/admin/applications:
+ * /api/admin/scoring-conditions:
  *   get:
- *     summary: Find applications
+ *     summary: Find scoring conditions
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
@@ -37,7 +37,7 @@ export const GET = async (request: NextRequest) => {
 
     const rows = await db
       .select()
-      .from(applications)
+      .from(scoringConditions)
       .where(where)
       .orderBy(orderBy)
       .limit(limit)
@@ -45,11 +45,11 @@ export const GET = async (request: NextRequest) => {
 
     const rowsCount = await db
       .select({ count: count() })
-      .from(applications)
+      .from(scoringConditions)
       .where(where);
 
     const totalCount = rowsCount[0].count.toString();
-    const contentRange = `applications ${offset}-${limit - 1}/${totalCount}`
+    const contentRange = `scoring-features ${offset}-${limit - 1}/${totalCount}`
     const response = NextResponse.json(rows, { status: 200 });
       
     response.headers.set('Content-Range', contentRange);
@@ -58,14 +58,14 @@ export const GET = async (request: NextRequest) => {
 
     return response;
   } catch (error) {
-    console.error('[API][GET][Admin][applications]', error);
+    console.error('[API][GET][Admin][scoring-features]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }
 
 const FIELDS: Record<any, PgColumn<any>> = {
-  id: applications.id,
-  updatedAt: applications.updatedAt,
+  id: scoringConditions.id,
+  updatedAt: scoringConditions.updatedAt,
 };
 
 const DEFAULT_SORT = ["updatedAt", "DESC"];
@@ -84,14 +84,14 @@ const searchParams = (request: NextRequest): [number, number, SQL<unknown> | und
   const [sortA, sortB] = sort ? JSON.parse(sort) : DEFAULT_SORT;
 
   const sortOrderByFn = sortB === "ASC" ? asc : desc;
-  const sortOrderBy = sortOrderByFn(FIELDS[sortA] || applications.updatedAt);
+  const sortOrderBy = sortOrderByFn(FIELDS[sortA] || scoringConditions.updatedAt);
 
   const where = [];
 
   const filter = searchParams.get("filter");
   const filters = filter ? JSON.parse(filter) : {};
   if ('q' in filters) {
-    where.push(ilike(applications.name,  `${filters.q}%`))
+    where.push(ilike(scoringConditions.name,  `${filters.q}%`))
   }
   
   return [rangeLimit, rangeOffset, and(...where), sortOrderBy];
@@ -99,9 +99,9 @@ const searchParams = (request: NextRequest): [number, number, SQL<unknown> | und
 
 /**
  * @swagger
- * /api/admin/applications:
+ * /api/admin/scoring-conditions:
  *   post:
- *     summary: Create application
+ *     summary: Create scoring condition
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
@@ -129,12 +129,12 @@ export const POST = async (request: NextRequest) => {
     const data = await request.json();
 
     const rows = await db
-      .insert(applications)
-      .values(data).returning({ id: applications.id });
+      .insert(scoringConditions)
+      .values(data).returning({ id: scoringConditions.id });
 
     return NextResponse.json(rows[0], { status: 201 });
   } catch (error) {
-    console.error('[API][POST][Admin][applications][:id]', error);
+    console.error('[API][POST][Admin][scoring-conditions][:id]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }

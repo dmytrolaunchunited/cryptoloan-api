@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { BooleanField, CreateButton, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, List, SearchInput, SelectColumnsButton, TextField, TopToolbar, WrapperField } from "react-admin";
+import { CreateButton, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, List, ReferenceArrayField, SearchInput, SelectColumnsButton, SingleFieldList, TextField, TopToolbar, WrapperField } from "react-admin";
 import { Chip } from '@mui/material';
 import { AdminEmpty } from "./admin-empty";
 
@@ -14,7 +14,7 @@ const filters = [
 const Actions: FC = memo(() => {
   return (
     <TopToolbar>
-      <SelectColumnsButton preferenceKey="application.table" sx={{
+      <SelectColumnsButton preferenceKey="scoringFeature.table" sx={{
         '&.MuiButtonBase-root': {
           padding: 1,
           borderRadius: 18,
@@ -39,7 +39,7 @@ const Actions: FC = memo(() => {
   );
 });
 
-export const AdminApplicationList: FC = memo(() => {
+export const AdminScoringFeatureList: FC = memo(() => {
   const actions = <Actions />;
   const empty = <AdminEmpty />;
 
@@ -53,18 +53,38 @@ export const AdminApplicationList: FC = memo(() => {
       }
     }}>
       <DatagridConfigurable
-        preferenceKey="application.table"
+        preferenceKey="scoringFeature.table"
+        rowSx={(i) => {
+          if (i.type == 'social') {
+            return {
+              backgroundColor: 'rgb(76, 175, 80, 0.1)'
+            };
+          }
+          if (i.type == 'behavioral') {
+            return {
+              backgroundColor: 'rgb(239, 83, 80, 0.1)'
+            };
+          }
+          return {};
+        }}
       >
-        <TextField
-          source="id"
-          label="ID"
-        />
+        <TextField source="id" label="ID" />
+        
         <FunctionField label="NAME" render={i => (
-          <Chip label={i.name.toUpperCase()}/>
+          <Chip label={i.name}/>
+        )} />
+        <FunctionField label="TYPE" render={i => (
+          <Chip label={i.type.toUpperCase()}/>
         )} />
 
-        <BooleanField label="ACTIVE" source="isActive" />
-
+        <ReferenceArrayField label="SCORING CONDITIONS" source="scoringConditions" reference="scoring-conditions">
+          <SingleFieldList>
+            <FunctionField source="name" render={i => (
+              <Chip label={i.name}/>
+            )}/>
+          </SingleFieldList>
+        </ReferenceArrayField>
+        
         <DateField
           label="UPDATED AT"
           source="updatedAt" showTime showDate />

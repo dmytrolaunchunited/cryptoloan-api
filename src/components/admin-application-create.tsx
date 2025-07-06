@@ -1,6 +1,6 @@
 import { Close, Done } from "@mui/icons-material";
-import { FC, memo, useMemo } from "react";
-import { Button, Create, required, SaveButton, SimpleForm, TextInput, Toolbar, useRedirect } from "react-admin";
+import { FC, memo, useCallback, useMemo } from "react";
+import { BooleanInput, Button, Create, required, SaveButton, SimpleForm, TextInput, Toolbar, useRedirect } from "react-admin";
 
 const CreateToolbar: FC = memo(() => {
   const redirect = useRedirect();
@@ -41,10 +41,16 @@ const CreateToolbar: FC = memo(() => {
 });
 
 export const AdminApplicationCreate: FC = memo(() => {
+  const redirect = useRedirect();
+
   const toolbar = <CreateToolbar />;
 
+  const onSuccess = useCallback(() => {
+    redirect(`/applications`);
+  }, [redirect]);
+
   return (
-    <Create sx={{
+    <Create mutationOptions={{ onSuccess }}  sx={{
       '& .RaCreate-main': {
         marginTop: 1,
       }
@@ -54,6 +60,10 @@ export const AdminApplicationCreate: FC = memo(() => {
       }}>
         <TextInput size="small" source="name" fullWidth validate={required()} />
         <TextInput size="small" source="uuid" fullWidth validate={required()} />
+
+        <BooleanInput size="small" source="isActive" label="Active" defaultValue={true} fullWidth sx={{
+          marginLeft: 1,
+        }}/>
       </SimpleForm>
     </Create>
   );

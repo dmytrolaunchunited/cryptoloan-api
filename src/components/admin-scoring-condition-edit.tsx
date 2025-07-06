@@ -1,12 +1,12 @@
 import { Close, Done } from "@mui/icons-material";
 import { FC, memo, useCallback, useMemo } from "react";
-import { BooleanInput, Button, Edit, required, SaveButton, SimpleForm, TextInput, Toolbar, useRedirect } from "react-admin";
+import { Button, required, SaveButton, SimpleForm, TextInput, NumberInput, BooleanInput, Toolbar, useRedirect, Edit } from "react-admin";
 
 const EditToolbar: FC = memo(() => {
   const redirect = useRedirect();
   
   const onClickCancel = useMemo(() => () => {
-    redirect('/applications');
+    redirect('/scoring-conditions');
   }, [redirect]);
 
   return (
@@ -40,13 +40,13 @@ const EditToolbar: FC = memo(() => {
   );
 });
 
-export const AdminApplicationEdit: FC = memo(() => {
+export const AdminScoringConditionEdit: FC = memo(() => {
   const redirect = useRedirect();
 
   const toolbar = <EditToolbar />;
 
   const onSuccess = useCallback(() => {
-    redirect(`/applications`);
+    redirect(`/scoring-conditions`);
   }, [redirect]);
 
   const transform = useCallback((data: any) => {
@@ -57,7 +57,7 @@ export const AdminApplicationEdit: FC = memo(() => {
 
   return (
     <Edit mutationMode="pessimistic" mutationOptions={{ onSuccess }} transform={transform} sx={{
-      '& .RaEdit-main': {
+      '& .RaCreate-main': {
         marginTop: 1,
       }
     }}>
@@ -65,8 +65,11 @@ export const AdminApplicationEdit: FC = memo(() => {
         paddingBottom: 0,
       }}>
         <TextInput disabled size="small" source="id" />
-        <TextInput size="small" source="name" validate={required()} />
-        <TextInput size="small" source="uuid" validate={required()} />
+        <TextInput size="small" source="name" fullWidth validate={required()} />
+        <TextInput size="small" source="text" fullWidth validate={required()} />
+        <TextInput size="small" source="description" fullWidth />
+
+        <NumberInput size="small" source="value" fullWidth validate={required()} />
 
         <BooleanInput size="small" source="isActive" label="Active" defaultValue={true} fullWidth sx={{
           marginLeft: 1,

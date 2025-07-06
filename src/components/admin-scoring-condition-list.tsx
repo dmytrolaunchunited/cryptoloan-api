@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { CreateButton, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, List, ReferenceField, SearchInput, SelectColumnsButton, TextField, TopToolbar, WrapperField } from "react-admin";
+import { BooleanField, CreateButton, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, List, SearchInput, SelectColumnsButton, TextField, TopToolbar, WrapperField } from "react-admin";
 import { Chip } from '@mui/material';
 import { AdminEmpty } from "./admin-empty";
 
@@ -14,7 +14,14 @@ const filters = [
 const Actions: FC = memo(() => {
   return (
     <TopToolbar>
-      <SelectColumnsButton preferenceKey="user.table" sx={{
+      <SelectColumnsButton preferenceKey="scoringCondition.table" sx={{
+        '&.MuiButtonBase-root': {
+          padding: 1,
+          borderRadius: 18,
+          paddingX: 2,
+        }
+      }} />
+      <CreateButton sx={{
         '&.MuiButtonBase-root': {
           padding: 1,
           borderRadius: 18,
@@ -32,7 +39,7 @@ const Actions: FC = memo(() => {
   );
 });
 
-export const AdminUserList: FC = memo(() => {
+export const AdminScoringConditionList: FC = memo(() => {
   const actions = <Actions />;
   const empty = <AdminEmpty />;
 
@@ -45,24 +52,24 @@ export const AdminUserList: FC = memo(() => {
         minHeight: 'auto',
       }
     }}>
-      <DatagridConfigurable preferenceKey="user.table">
+      <DatagridConfigurable
+        preferenceKey="scoringCondition.table"
+      >
         <TextField source="id" label="ID" />
 
-        <FunctionField label="PRIVY ID" render={i => {
-          const visible = i.privy.slice(-5);
-          const masked = '*'.repeat(5);
-          return (
-            <Chip label={`${masked}${visible}`}/>
-          );
-        }} />
-
-        <FunctionField label="APPLICATION" render={i => (
-          <Chip label={i.application.name.toUpperCase()}/>
+        <FunctionField label="NAME" render={i => (
+          <Chip label={i.name}/>
         )} />
+
+        <TextField source="text" label="TEXT" />
+
+        <TextField source="value" label="VALUE" />
+      
+        <BooleanField label="ACTIVE" source="isActive" />
 
         <DateField label="UPDATED AT" source="updatedAt" showTime showDate />
 
-        <WrapperField label="ACTIONS" source="createdAt" textAlign="right" sortable={false}>
+        <WrapperField label="ACTIONS" textAlign="right" sortable={false}>
           <EditButton sx={{
             '&.MuiButtonBase-root': {
               padding: 1,

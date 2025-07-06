@@ -1,13 +1,13 @@
 import { db } from "../../../../../db";
-import { applications } from "../../../../../db/schema";
+import { scoringConditions } from "../../../../../db/schema";
 import { NextResponse, NextRequest } from "next/server";
 import { eq } from "drizzle-orm";
 
 /**
  * @swagger
- * /api/admin/applications/{id}:
+ * /api/admin/scoring-conditions/{id}:
  *   get:
- *     summary: Find user
+ *     summary: Find scoring condition
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
@@ -37,22 +37,22 @@ export const GET = async (request: NextRequest, context: any) => {
 
     const rows = await db
       .select()
-      .from(applications)
-      .where(eq(applications.id, id))
+      .from(scoringConditions)
+      .where(eq(scoringConditions.id, id))
       .limit(1);
 
     return NextResponse.json(rows[0], { status: 200 });
   } catch (error) {
-    console.error('[API][GET][Admin][applications][:id]', error);
+    console.error('[API][GET][Admin][scoring-conditions][:id]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }
 
 /**
  * @swagger
- * /api/admin/applications/{id}:
+ * /api/admin/scoring-conditions/{id}:
  *   delete:
- *     summary: Delete application
+ *     summary: Delete scoring condition
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
@@ -81,22 +81,22 @@ export const DELETE = async (request: NextRequest, context: any) => {
     const id = Number(params.id);
 
     const rows = await db
-      .delete(applications)
-      .where(eq(applications.id, id))
-      .returning({ id: applications.id });
+      .delete(scoringConditions)
+      .where(eq(scoringConditions.id, id))
+      .returning({ id: scoringConditions.id });
 
     return NextResponse.json(rows[0], { status: 200 });
   } catch (error) {
-    console.error('[API][DELETE][Admin][applications[:id]', error);
+    console.error('[API][DELETE][Admin][scoring-conditions][:id]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }
 
 /**
  * @swagger
- * /api/admin/applications/{id}:
+ * /api/admin/scoring-conditions/{id}:
  *   put:
- *     summary: Update application
+ *     summary: Update scoring condition
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
@@ -127,14 +127,14 @@ export const PUT = async (request: NextRequest, context: any) => {
     const data = await request.json();
 
     const rows = await db
-      .update(applications)
+      .update(scoringConditions)
       .set(data)
-      .where(eq(applications.id, id))
-      .returning({ id: applications.id });
+      .where(eq(scoringConditions.id, id))
+      .returning({ id: scoringConditions.id });
 
     return NextResponse.json(rows[0], { status: 200 });
   } catch (error) {
-    console.error('[API][PUT][Admin][applications][:id]', error);
+    console.error('[API][PUT][Admin][scoring-conditions][:id]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }

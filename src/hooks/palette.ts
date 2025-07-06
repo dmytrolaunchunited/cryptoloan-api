@@ -7,7 +7,7 @@ export const usePalette = () => {
   return useMemo(() => {
     const mode = theme;
     const primary = {
-      main: "#6f6f6f",
+      main: "#368fe7",
     };
     const secondary = {
       main: "#a1a1a1",

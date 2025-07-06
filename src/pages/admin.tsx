@@ -6,15 +6,23 @@ import simpleRestProvider from "ra-data-simple-rest";
 import dynamic from "next/dynamic";
 import { AdminLoginPage } from "../components/admin-login-page";
 import { usePalette } from "../hooks/palette";
-import { AdminApplicationList } from "../components/admin-application-list";
-import { AdminApplicationEdit } from "../components/admin-application-edit";
-import { AdminApplicationCreate } from "../components/admin-application-create";
-
-import { AdminConditionList } from "../components/admin-condition-list";
 import { AdminLayout } from "../components/admin-layout";
 import { AdminDashboard } from "../components/admin-dashboard";
 import { AdminCatchAll } from "../components/admin-catch-all";
+import { AdminScoringConditionList } from "../components/admin-scoring-condition-list";
+import { AdminScoringConditionCreate } from "../components/admin-scoring-condition-create";
+import { AdminScoringConditionEdit } from "../components/admin-scoring-condition-edit";
+import { AdminScoringFeatureList } from "../components/admin-scoring-feature-list";
+import { AdminScoringFeatureCreate } from "../components/admin-scoring-feature-create";
+import { AdminScoringFeatureEdit } from "../components/admin-scoring-feature-edit";
+import { AdminUserEdit } from "../components/admin-user-edit";
 import { AdminUserList } from "../components/admin-user-list";
+import { AdminScoringQuestionCreate } from "../components/admin-scoring-question-create";
+import { AdminScoringQuestionList } from "../components/admin-scoring-question-list";
+import { AdminScoringQuestionEdit } from "../components/admin-scoring-question-edit";
+import { AdminApplicationList } from "../components/admin-application-list";
+import { AdminApplicationEdit } from "../components/admin-application-edit";
+import { AdminApplicationCreate } from "../components/admin-application-create";
 
 interface CheckError {
   status: number;
@@ -79,14 +87,6 @@ const App = memo(() => {
   return (
     <Admin theme={theme} catchAll={catchAll} dashboard={dashboard} layout={layout} loginPage={loginPage} dataProvider={dataProvider} authProvider={authProvider}>
       <Resource
-        name="users"
-        icon={Description}
-        list={AdminUserList}
-        // edit={AdminApplicationEdit}
-        // create={AdminApplicationCreate}
-        recordRepresentation="id"
-      />
-      <Resource
         name="applications"
         icon={Description}
         list={AdminApplicationList}
@@ -95,9 +95,43 @@ const App = memo(() => {
         recordRepresentation="id"
       />
       <Resource
-        name="conditions"
+        name="scoring-conditions"
         icon={Description}
-        list={AdminConditionList}
+        list={AdminScoringConditionList}
+        edit={AdminScoringConditionEdit}
+        create={AdminScoringConditionCreate}
+        options={{
+          label: "Scoring Conditions"
+        }}
+        recordRepresentation="id"
+      />
+       <Resource
+        name="scoring-features"
+        icon={Description}
+        list={AdminScoringFeatureList}
+        edit={AdminScoringFeatureEdit}
+        create={AdminScoringFeatureCreate}
+        options={{
+          label: "Scoring Features"
+        }}
+        recordRepresentation="id"
+      />
+      <Resource
+        name="scoring-questions"
+        icon={Description}
+        list={AdminScoringQuestionList}
+        edit={AdminScoringQuestionEdit}
+        create={AdminScoringQuestionCreate}
+        options={{
+          label: "Scoring Questions"
+        }}
+        recordRepresentation="id"
+      />
+      <Resource
+        name="users"
+        icon={Description}
+        list={AdminUserList}
+        edit={AdminUserEdit}
         recordRepresentation="id"
       />
     </Admin>

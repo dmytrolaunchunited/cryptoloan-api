@@ -108,27 +108,27 @@ export const AdminConditionList: FC = memo(() => {
         )} />
 
         <FunctionField label="SCORING FEATURE OPTION" render={i => {
-          // if (i.scoringFeatureOption.includes('eq')) {
-          //   const [, value] = i.scoringFeatureOption.split('eq');
+          // if (i.scoringCondition.includes('eq')) {
+          //   const [, value] = i.scoringCondition.split('eq');
           //   return `=${value}`;
           // }
-          // if (i.scoringFeatureOption.includes('lte')) {
-          //   const [, value] = i.scoringFeatureOption.split('lte');
+          // if (i.scoringCondition.includes('lte')) {
+          //   const [, value] = i.scoringCondition.split('lte');
           //   return `<=${value}`;
           // }
-          // if (i.scoringFeatureOption.includes('lt')) {
-          //   const [, value] = i.scoringFeatureOption.split('lt');
+          // if (i.scoringCondition.includes('lt')) {
+          //   const [, value] = i.scoringCondition.split('lt');
           //   return `<${value}`;
           // }
-          // if (i.scoringFeatureOption.includes('gte')) {
-          //   const [, value] = i.scoringFeatureOption.split('gte');
+          // if (i.scoringCondition.includes('gte')) {
+          //   const [, value] = i.scoringCondition.split('gte');
           //   return `>=${value}`;
           // }
-          // if (i.scoringFeatureOption.includes('gt')) {
-          //   const [, value] = i.scoringFeatureOption.split('gt');
+          // if (i.scoringCondition.includes('gt')) {
+          //   const [, value] = i.scoringCondition.split('gt');
           //   return `>${value}`;
           // }
-          return i.scoringFeatureOption
+          return i.scoringCondition
         }} />
 
         <NumberField label="SCORING" source="scoring" />

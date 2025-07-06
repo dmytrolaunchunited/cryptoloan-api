@@ -12,7 +12,17 @@ export const AdminLayout: FC<Props> = memo(({ children }) => {
   }, []);
 
   return (
-    <Layout appBar={appBar}>
+    <Layout appBar={appBar} sx={{
+      '& .MuiMenuItem-root': {
+        opacity: 0.5
+      },
+      '& .RaMenuItemLink-active': {
+        opacity: 1,
+      },
+      '& .MuiFormControl-root, & .MuiAutocomplete-root': {
+        width: '100%',
+      },
+    }}>
       {children}
     </Layout>
   );

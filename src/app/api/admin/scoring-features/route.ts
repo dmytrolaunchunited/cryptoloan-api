@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { count, desc,asc, SQL, and, ilike } from "drizzle-orm";
+import { count, desc,asc, SQL, and, ilike, sql } from "drizzle-orm";
 import { PgColumn } from "drizzle-orm/pg-core";
-import { applications } from "../../../../db/schema";
+import { scoringFeaturesToScoringConditions, scoringFeatures } from "../../../../db/schema";
 import { db } from "../../../../db";
 
 /**
  * @swagger
- * /api/admin/applications:
+ * /api/admin/scoring-features:
  *   get:
- *     summary: Find applications
+ *     summary: Find scoring features
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
@@ -36,8 +36,23 @@ export const GET = async (request: NextRequest) => {
     const [limit, offset, where, orderBy] = searchParams(request);
 
     const rows = await db
-      .select()
-      .from(applications)
+      .select({
+        id: scoringFeatures.id,
+        name: scoringFeatures.name,
+        type: scoringFeatures.type,
+        description: scoringFeatures.description,
+        isActive: scoringFeatures.isActive,
+        createdAt: scoringFeatures.createdAt,
+        updatedAt: scoringFeatures.updatedAt,
+        scoringConditions: sql`
+          (
+            SELECT json_agg(${scoringFeaturesToScoringConditions.scoringConditionId})
+            FROM ${scoringFeaturesToScoringConditions}
+            WHERE ${scoringFeaturesToScoringConditions.scoringFeatureId} = ${scoringFeatures.id}
+          )
+        `.as('scoringConditions'),
+      })
+      .from(scoringFeatures)
       .where(where)
       .orderBy(orderBy)
       .limit(limit)
@@ -45,11 +60,11 @@ export const GET = async (request: NextRequest) => {
 
     const rowsCount = await db
       .select({ count: count() })
-      .from(applications)
+      .from(scoringFeatures)
       .where(where);
 
     const totalCount = rowsCount[0].count.toString();
-    const contentRange = `applications ${offset}-${limit - 1}/${totalCount}`
+    const contentRange = `scoring-features ${offset}-${limit - 1}/${totalCount}`
     const response = NextResponse.json(rows, { status: 200 });
       
     response.headers.set('Content-Range', contentRange);
@@ -58,14 +73,14 @@ export const GET = async (request: NextRequest) => {
 
     return response;
   } catch (error) {
-    console.error('[API][GET][Admin][applications]', error);
+    console.error('[API][GET][Admin][scoring-features]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }
 
 const FIELDS: Record<any, PgColumn<any>> = {
-  id: applications.id,
-  updatedAt: applications.updatedAt,
+  id: scoringFeatures.id,
+  updatedAt: scoringFeatures.updatedAt,
 };
 
 const DEFAULT_SORT = ["updatedAt", "DESC"];
@@ -84,14 +99,14 @@ const searchParams = (request: NextRequest): [number, number, SQL<unknown> | und
   const [sortA, sortB] = sort ? JSON.parse(sort) : DEFAULT_SORT;
 
   const sortOrderByFn = sortB === "ASC" ? asc : desc;
-  const sortOrderBy = sortOrderByFn(FIELDS[sortA] || applications.updatedAt);
+  const sortOrderBy = sortOrderByFn(FIELDS[sortA] || scoringFeatures.updatedAt);
 
   const where = [];
 
   const filter = searchParams.get("filter");
   const filters = filter ? JSON.parse(filter) : {};
   if ('q' in filters) {
-    where.push(ilike(applications.name,  `${filters.q}%`))
+    where.push(ilike(scoringFeatures.name,  `${filters.q}%`))
   }
   
   return [rangeLimit, rangeOffset, and(...where), sortOrderBy];
@@ -99,9 +114,9 @@ const searchParams = (request: NextRequest): [number, number, SQL<unknown> | und
 
 /**
  * @swagger
- * /api/admin/applications:
+ * /api/admin/scoring-features:
  *   post:
- *     summary: Create application
+ *     summary: Create scoring feature
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
@@ -129,12 +144,24 @@ export const POST = async (request: NextRequest) => {
     const data = await request.json();
 
     const rows = await db
-      .insert(applications)
-      .values(data).returning({ id: applications.id });
+      .insert(scoringFeatures)
+      .values(data).returning({ id: scoringFeatures.id });
+      
+    const row = rows[0];
+    const scoringFeatureId = row.id;
 
-    return NextResponse.json(rows[0], { status: 201 });
+    const dataRelations = data.scoringConditions.map((scoringConditionId: number) => ({
+      scoringConditionId,
+      scoringFeatureId,
+    }));
+
+    await db
+      .insert(scoringFeaturesToScoringConditions)
+      .values(dataRelations);
+
+    return NextResponse.json(row, { status: 201 });
   } catch (error) {
-    console.error('[API][POST][Admin][applications][:id]', error);
+    console.error('[API][POST][Admin][scoring-features][:id]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }

@@ -1,12 +1,12 @@
 import { Close, Done } from "@mui/icons-material";
 import { FC, memo, useCallback, useMemo } from "react";
-import { BooleanInput, Button, Edit, required, SaveButton, SimpleForm, TextInput, Toolbar, useRedirect } from "react-admin";
+import { Button, Create, required, SaveButton, SimpleForm, TextInput, BooleanInput, Toolbar, useRedirect, SelectInput, ReferenceArrayInput, AutocompleteArrayInput } from "react-admin";
 
-const EditToolbar: FC = memo(() => {
+const CreateToolbar: FC = memo(() => {
   const redirect = useRedirect();
   
   const onClickCancel = useMemo(() => () => {
-    redirect('/applications');
+    redirect('/scoring-features');
   }, [redirect]);
 
   return (
@@ -40,38 +40,39 @@ const EditToolbar: FC = memo(() => {
   );
 });
 
-export const AdminApplicationEdit: FC = memo(() => {
+export const AdminScoringFeatureCreate: FC = memo(() => {
   const redirect = useRedirect();
 
-  const toolbar = <EditToolbar />;
+  const toolbar = <CreateToolbar />;
 
   const onSuccess = useCallback(() => {
-    redirect(`/applications`);
+    redirect(`/scoring-features`);
   }, [redirect]);
 
-  const transform = useCallback((data: any) => {
-    delete data.createdAt
-    delete data.updatedAt;
-    return data;
-  }, []);
-
   return (
-    <Edit mutationMode="pessimistic" mutationOptions={{ onSuccess }} transform={transform} sx={{
-      '& .RaEdit-main': {
+    <Create mutationOptions={{ onSuccess }} sx={{
+      '& .RaCreate-main': {
         marginTop: 1,
       }
     }}>
       <SimpleForm toolbar={toolbar} sx={{
         paddingBottom: 0,
       }}>
-        <TextInput disabled size="small" source="id" />
-        <TextInput size="small" source="name" validate={required()} />
-        <TextInput size="small" source="uuid" validate={required()} />
+        <TextInput size="small" source="name" fullWidth validate={required()} />
+        <TextInput size="small" source="description" fullWidth />
+        
+        <SelectInput size="small" source="type" validate={required()} fullWidth choices={[
+          { id: 'social', name: 'Social' },
+          { id: 'behavioral', name: 'Behavioral' },
+        ]} />
+        <ReferenceArrayInput source="scoringConditions" reference="scoring-conditions">
+          <AutocompleteArrayInput size="small" validate={required()} optionText="name" />
+        </ReferenceArrayInput>
 
         <BooleanInput size="small" source="isActive" label="Active" defaultValue={true} fullWidth sx={{
           marginLeft: 1,
         }}/>
       </SimpleForm>
-    </Edit>
+    </Create>
   );
 });

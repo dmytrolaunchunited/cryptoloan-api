@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { count, desc, asc, SQL, eq } from "drizzle-orm";
+import { count, desc, asc, SQL, eq, sql } from "drizzle-orm";
 import { applications, profiles, users } from "../../../../db/schema";
 import { db } from "../../../../db";
 import { PgColumn } from "drizzle-orm/pg-core";
@@ -36,10 +36,22 @@ export const GET = async (request: NextRequest) => {
     const [limit, offset, orderBy] = searchParams(request);
 
     const rows = await db
-      .select()
+      .select({
+        id: users.id,
+        privy: users.privy,
+        phone: users.phone,
+        email: users.email,
+        createdAt: users.createdAt,
+        updatedAt: users.updatedAt,
+        application: sql`
+          (
+            SELECT row_to_json(applications)
+            FROM applications
+            WHERE applications.id = ${users.applicationId}
+          )
+        `.as('application'),
+      })
       .from(users)
-      .leftJoin(applications, eq(applications.id, users.applicationId))
-      .leftJoin(profiles, eq(profiles.userId, users.id))
       .orderBy(orderBy)
       .limit(limit)
       .offset(offset);
@@ -48,15 +60,9 @@ export const GET = async (request: NextRequest) => {
       .select({ count: count() })
       .from(users);
 
-    const data = rows.map(({ users, applications, profiles }) => ({
-      ...users,
-      application: applications,
-      profile: profiles
-    }));
-
     const totalCount = rowsCount[0].count.toString();
     const contentRange = `users ${offset}-${limit - 1}/${totalCount}`
-    const response = NextResponse.json(data, { status: 200 });
+    const response = NextResponse.json(rows, { status: 200 });
       
     response.headers.set('Content-Range', contentRange);
     response.headers.set('X-Total-Count', totalCount);
