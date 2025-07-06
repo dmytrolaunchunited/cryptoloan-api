@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { count, desc, asc, SQL, eq, sql } from "drizzle-orm";
-import { applications, profiles, users } from "../../../../db/schema";
+import { count, desc, asc, SQL, sql } from "drizzle-orm";
+import { users } from "../../../../db/schema";
 import { db } from "../../../../db";
 import { PgColumn } from "drizzle-orm/pg-core";
 

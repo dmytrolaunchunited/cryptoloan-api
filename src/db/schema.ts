@@ -127,13 +127,13 @@ export const users = pgTable('users', {
 });
 
 export const usersRelations = relations(users, ({ one, many }) => ({
-	profile: one(profiles),
+	profile: one(userProfiles),
   application: one(applications),
   userDevices: many(userDevices),
   userFeatures: many(userFeatures),
 }));
 
-export const profiles = pgTable('profiles', {
+export const userProfiles = pgTable('user_profiles', {
   id: serial('id').primaryKey(),
   userId: integer('user_id').references(() => users.id),
   firstName: varchar('first_name'),
