@@ -1,6 +1,6 @@
 import { Close, Done } from "@mui/icons-material";
 import { FC, memo, useCallback, useMemo } from "react";
-import { Button, required, SaveButton, SimpleForm, TextInput, NumberInput, BooleanInput, Toolbar, useRedirect, Edit } from "react-admin";
+import { Button, required, SaveButton, SimpleForm, TextInput, NumberInput, BooleanInput, Toolbar, useRedirect, Edit, SelectInput } from "react-admin";
 
 const EditToolbar: FC = memo(() => {
   const redirect = useRedirect();
@@ -66,8 +66,16 @@ export const AdminScoringConditionEdit: FC = memo(() => {
       }}>
         <TextInput disabled size="small" source="id" />
         <TextInput size="small" source="name" fullWidth validate={required()} />
-        <TextInput size="small" source="text" fullWidth validate={required()} />
+        <TextInput size="small" source="label" fullWidth />
         <TextInput size="small" source="description" fullWidth />
+
+        <SelectInput size="small" source="relation" fullWidth choices={[
+          { id: 'dateOfBirth', name: 'Day Of Birth' },
+          { id: 'citizenshipCountry', name: 'Citizenship Country' },
+          { id: 'residenceCountry', name: 'Residence Country' },
+        ]} />
+
+        <TextInput size="small" source="condition" fullWidth validate={required()} />
 
         <NumberInput size="small" source="value" fullWidth validate={required()} />
 

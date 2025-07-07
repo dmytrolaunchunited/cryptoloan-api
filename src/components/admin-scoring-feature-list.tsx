@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { CreateButton, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, List, ReferenceArrayField, SearchInput, SelectColumnsButton, SingleFieldList, TextField, TopToolbar, WrapperField } from "react-admin";
+import { BooleanField, CreateButton, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, List, ReferenceArrayField, SearchInput, SelectColumnsButton, SingleFieldList, TextField, TopToolbar, WrapperField } from "react-admin";
 import { Chip } from '@mui/material';
 import { AdminEmpty } from "./admin-empty";
 
@@ -85,9 +85,10 @@ export const AdminScoringFeatureList: FC = memo(() => {
           </SingleFieldList>
         </ReferenceArrayField>
         
-        <DateField
-          label="UPDATED AT"
-          source="updatedAt" showTime showDate />
+        <BooleanField label="ACTIVE" source="isActive" />
+                
+        <DateField label="UPDATED AT" source="updatedAt" showTime showDate />
+
         <WrapperField label="ACTIONS" textAlign="right" sortable={false}>
           <EditButton sx={{
             '&.MuiButtonBase-root': {

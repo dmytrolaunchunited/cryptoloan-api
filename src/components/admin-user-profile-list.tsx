@@ -13,7 +13,7 @@ const filters = [
 const Actions: FC = memo(() => {
   return (
     <TopToolbar>
-      <SelectColumnsButton preferenceKey="user.table" sx={{
+      <SelectColumnsButton preferenceKey="userProfile.table" sx={{
         '&.MuiButtonBase-root': {
           padding: 1,
           borderRadius: 18,
@@ -67,7 +67,7 @@ export const AdminUserProfileList: FC = memo(() => {
         minHeight: 'auto',
       }
     }}>
-      <DatagridConfigurable preferenceKey="user.table" rowClick={false}>
+      <DatagridConfigurable preferenceKey="userProfile.table" rowClick={false}>
         <TextField source="id" label="ID" />
         <TextField source="firstName" label="FIRST NAME" />
         <TextField source="lastName" label="LAST NAME" />

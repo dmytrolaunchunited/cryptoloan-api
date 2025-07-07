@@ -3,6 +3,8 @@ import { Avatar, Card, CardHeader, Grid, IconButton } from '@mui/material';
 import { FC, memo } from 'react';
 import { useStore } from 'react-admin';
 import { AdminDashboardUsers } from './admin-dashboard-users';
+import { AdminDashboardApplications } from './admin-dashboard-applications';
+import { AdminDashboardUserDevices } from './admin-dashboard-user-devices';
 
 export const AdminDashboard: FC = memo(() => {
   const [display, setDisplay] = useStore('welcome', true);
@@ -39,6 +41,16 @@ export const AdminDashboard: FC = memo(() => {
             </Card>
           </Grid>
         )}
+        <Grid size={2} sx={{
+          ...(!display ? { marginTop: 1 } : {}),
+        }}>
+          <AdminDashboardApplications />
+        </Grid>
+        <Grid size={2} sx={{
+          ...(!display ? { marginTop: 1 } : {}),
+        }}>
+          <AdminDashboardUserDevices />
+        </Grid>
         <Grid size={2} sx={{
           ...(!display ? { marginTop: 1 } : {}),
         }}>

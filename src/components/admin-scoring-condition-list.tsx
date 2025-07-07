@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { BooleanField, CreateButton, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, List, SearchInput, SelectColumnsButton, TextField, TopToolbar, WrapperField } from "react-admin";
+import { BooleanField, CreateButton, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, List, SearchInput, SelectColumnsButton, SelectField, TextField, TopToolbar, WrapperField } from "react-admin";
 import { Chip } from '@mui/material';
 import { AdminEmpty } from "./admin-empty";
 
@@ -61,10 +61,16 @@ export const AdminScoringConditionList: FC = memo(() => {
           <Chip label={i.name}/>
         )} />
 
-        <TextField source="text" label="TEXT" />
-
+        <TextField source="label" label="LABEL" />
+        <TextField source="condition" label="CONDITION" />
         <TextField source="value" label="VALUE" />
-      
+
+        <SelectField source="relation" label="RELATION" choices={[
+          { id: 'dateOfBirth', name: 'Day Of Birth' },
+          { id: 'citizenshipCountry', name: 'Citizenship Country' },
+          { id: 'residenceCountry', name: 'Residence Country' },
+        ]} />
+
         <BooleanField label="ACTIVE" source="isActive" />
 
         <DateField label="UPDATED AT" source="updatedAt" showTime showDate />

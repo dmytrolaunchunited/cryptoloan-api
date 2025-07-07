@@ -4,8 +4,10 @@ import { pgTable, serial, timestamp, varchar, integer, date, boolean, primaryKey
 export const scoringConditions = pgTable("scoring_conditions", {
   id: serial('id').primaryKey(),
   name: varchar(),
-  text: varchar(),
+  label: varchar(),
   value: varchar(),
+  relation: varchar(),
+  condition: varchar(),
   description: varchar(),
   isActive: boolean('is_active').default(true),
   createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -94,7 +96,7 @@ export const userFeatures = pgTable("user_features", {
   id: serial('id').primaryKey(),
   userId: integer('user_id').references(() => users.id),
   scoringFeatureId: integer('scoring_feature_id').references(() => scoringFeatures.id),
-  scoringFeatureValue: varchar(),
+  scoringConditionId: integer('scoring_condition_id').references(() => scoringConditions.id),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
@@ -112,6 +114,7 @@ export const userDevices = pgTable('user_devices', {
 
 export const userFeaturesRelations = relations(userFeatures, ({ one }) => ({
   scoringFeature: one(scoringFeatures),
+  scoringCondition: one(scoringConditions),
   user: one(users),
 }));
 
@@ -164,16 +167,3 @@ export const scoringPayouts = pgTable("scoring_payouts", {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
-
-
-// <10
-// >125
-
-// // Бал	Сума
-// // до 10	відмова
-// // 11-20	10
-// // 21-40	25
-// // 41-70	50
-// // 71-100	100
-// // 101-125	100
-// // 126+	100

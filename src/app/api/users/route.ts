@@ -12,11 +12,6 @@ import { applications, users } from "../../../db/schema";
  *       - ApiKeyAuth: []   
  *     tags:
  *       - user
- *     requestBody:
- *       content:
- *         application/json:
- *           example:
- *             privy: cmcch0i1t01cel50nj19qd2eo
  *     responses:
  *       400:
  *         description: bad request
