@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { count, desc, asc, SQL, ilike, and, or } from "drizzle-orm";
+import { count, desc, asc, SQL, ilike, and, or, eq } from "drizzle-orm";
 import { userDevices } from "../../../../db/schema";
 import { db } from "../../../../db";
 import { PgColumn } from "drizzle-orm/pg-core";
@@ -90,6 +90,10 @@ const searchParams = (request: NextRequest): [number, number, SQL<unknown> | und
 
   const filter = searchParams.get("filter");
   const filters = filter ? JSON.parse(filter) : {};
+
+  if ('userId' in filters) {
+    where.push(eq(userDevices.userId, filters.userId));
+  }
   if ('q' in filters) {
     where.push(or(
       ilike(userDevices.model,  `${filters.q}%`),

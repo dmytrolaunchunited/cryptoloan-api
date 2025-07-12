@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, List, SearchInput, SelectColumnsButton, TextField, TopToolbar, WrapperField } from "react-admin";
+import { Button, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, Link, List, SearchInput, SelectColumnsButton, TextField, TopToolbar, useRecordContext, WrapperField } from "react-admin";
 import { Chip } from '@mui/material';
 import { AdminEmpty } from "./admin-empty";
 
@@ -10,6 +10,28 @@ const filters = [
     }
   }} />,
 ];
+
+const DeviceButton: FC = memo(() => {
+  const i = useRecordContext();
+  return (
+    <Button
+      component={Link}
+      to={`/user-devices?filter={"userId":${i?.id}}`}
+      sx={{
+        '& .MuiButton-icon': {
+          margin: 0,
+        },
+        '&.MuiButtonBase-root': {
+          padding: 1,
+          borderRadius: 18,
+          paddingX: 2,
+        }
+      }}
+    >
+      DEVICE INFO
+    </Button>
+  );
+});
 
 const Actions: FC = memo(() => {
   return (
@@ -66,6 +88,7 @@ export const AdminUserList: FC = memo(() => {
         <DateField label="UPDATED AT" source="updatedAt" showTime showDate />
 
         <WrapperField label="ACTIONS" textAlign="right" sortable={false}>
+          <DeviceButton />
           <EditButton sx={{
             '&.MuiButtonBase-root': {
               padding: 1,

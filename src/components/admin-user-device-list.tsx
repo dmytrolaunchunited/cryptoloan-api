@@ -65,7 +65,6 @@ export const AdminUserDeviceList: FC = memo(() => {
   const actions = <Actions />;
   const empty = <AdminEmpty />;
 
-  // console.log(searchParams)
   return (
     <List filters={filters} empty={empty} actions={actions} emptyWhileLoading sx={{
       '& .RaList-actions': {
