@@ -11,12 +11,14 @@ const filters = [
   }} />,
 ];
 
-const DeviceButton: FC = memo(() => {
+const FeatureButton: FC = memo(() => {
   const i = useRecordContext();
+  const filter = JSON.stringify({ userId: i?.id });
+  const searchParams = new URLSearchParams({ filter });
   return (
     <Button
       component={Link}
-      to={`/user-devices?filter={"userId":${i?.id}}`}
+      to={`/user-features?${searchParams.toString()}`}
       sx={{
         '& .MuiButton-icon': {
           margin: 0,
@@ -28,7 +30,55 @@ const DeviceButton: FC = memo(() => {
         }
       }}
     >
-      DEVICE INFO
+      FEATURES
+    </Button>
+  );
+});
+
+const ProfileButton: FC = memo(() => {
+  const i = useRecordContext();
+  const filter = JSON.stringify({ userId: i?.id });
+  const searchParams = new URLSearchParams({ filter });
+  return (
+    <Button
+      component={Link}
+      to={`/user-profiles?${searchParams.toString()}`}
+      sx={{
+        '& .MuiButton-icon': {
+          margin: 0,
+        },
+        '&.MuiButtonBase-root': {
+          padding: 1,
+          borderRadius: 18,
+          paddingX: 2,
+        }
+      }}
+    >
+      PROFILE
+    </Button>
+  );
+});
+
+const DeviceButton: FC = memo(() => {
+  const i = useRecordContext();
+  const filter = JSON.stringify({ userId: i?.id });
+  const searchParams = new URLSearchParams({ filter });
+  return (
+    <Button
+      component={Link}
+      to={`/user-devices?${searchParams.toString()}`}
+      sx={{
+        '& .MuiButton-icon': {
+          margin: 0,
+        },
+        '&.MuiButtonBase-root': {
+          padding: 1,
+          borderRadius: 18,
+          paddingX: 2,
+        }
+      }}
+    >
+      DEVICE
     </Button>
   );
 });
@@ -88,6 +138,8 @@ export const AdminUserList: FC = memo(() => {
         <DateField label="UPDATED AT" source="updatedAt" showTime showDate />
 
         <WrapperField label="ACTIONS" textAlign="right" sortable={false}>
+          <FeatureButton />
+          <ProfileButton />
           <DeviceButton />
           <EditButton sx={{
             '&.MuiButtonBase-root': {

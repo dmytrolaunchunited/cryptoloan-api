@@ -1,13 +1,13 @@
 import { db } from "../../../../../db";
-import { applications, userProfiles } from "../../../../../db/schema";
+import { applications, userFeatures } from "../../../../../db/schema";
 import { NextResponse, NextRequest } from "next/server";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 /**
  * @swagger
- * /api/users/{id}/profiles:
+ * /api/users/{id}/questions:
  *   get:
- *     summary: Find user profile
+ *     summary: Find user questions
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
@@ -38,36 +38,31 @@ export const GET = async (request: NextRequest, context: any) => {
     if (!applicationRows.length) {
       return new NextResponse('Forbidden', { status: 403 });
     }
+
     const params = await context.params;
     const id = Number(params.id);
     const rows = await db
       .select()
-      .from(userProfiles)
-      .where(and(eq(userProfiles.userId, id)))
+      .from(userFeatures)
+      .where(eq(userFeatures.userId, id))
       .limit(1);
 
     return NextResponse.json(rows[0], { status: 200 });
   } catch (error) {
-    console.error('[API][GET][users][:id][profiles]', error);
+    console.error('[API][POST][users][:id][questions]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }
 
 /**
  * @swagger
- * /api/users/{id}/profiles:
+ * /api/users/{id}/questions:
  *   post:
- *     summary: Upsert user profile
+ *     summary: Upsert user questions
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
  *       - user
- *     requestBody:
- *       content:
- *         application/json:
- *           example:
- *             ipAddress: '192.168.1.1'
- *             firstName: 'Test'
  *     responses:
  *       400:
  *         description: bad request
@@ -100,30 +95,26 @@ export const POST = async (request: NextRequest, context: any) => {
 
     const data = await request.json();
 
-    const userProfileRows = await db
+    const userFeatureRows = await db
       .select()
-      .from(userProfiles)
-      .where(eq(userProfiles.userId, userId))
+      .from(userFeatures)
+      .where(eq(userFeatures.userId, userId))
       .limit(1);
-  
-    if (userProfileRows.length) {
-     const rows = await db
-        .update(userProfiles)
-        .set(data)
-        .where(eq(userProfiles.userId, userId))
-        .returning({ id: userProfiles.id });
-      
-      return NextResponse.json(rows[0], { status: 200 });
-    } else {
-      const rows = await db
-        .insert(userProfiles)
-        .values({ ...data, userId })
-        .returning({ id: userProfiles.id });
-    
-      return NextResponse.json(rows[0], { status: 200 });
+
+    if (userFeatureRows.length) {
+      await db
+        .delete(userFeatures)
+        .where(eq(userFeatures.userId, userId))
     }
+
+    const rows = await db
+      .insert(userFeatures)
+      .values(data.map((i: any) => ({ ...i, userId })))
+      .returning({ id: userFeatures.id });
+    
+    return NextResponse.json(rows[0], { status: 200 });
   } catch (error) {
-    console.error('[API][POST][users][:id][profiles]', error);
+    console.error('[API][POST][users][:id][questions]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }

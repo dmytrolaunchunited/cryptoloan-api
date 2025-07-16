@@ -1,13 +1,13 @@
 import { db } from "../../../../../db";
 import { applications, userDevices } from "../../../../../db/schema";
 import { NextResponse, NextRequest } from "next/server";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 /**
  * @swagger
- * /api/users/{id}/devices:
+ * /api/users/{id}/device:
  *   post:
- *     summary: Create user device
+ *     summary: Upsert user device
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
@@ -50,24 +50,30 @@ export const POST = async (request: NextRequest, context: any) => {
 
     const data = await request.json();
 
-    const rows = await db
+    const userProfileRows = await db
       .select()
       .from(userDevices)
-      .where(and(
-        eq(userDevices.userId, userId),
-        eq(userDevices.model, data.model),
-        eq(userDevices.ipAddress, data.ipAddress),
-      ))
+      .where(eq(userDevices.userId, userId))
       .limit(1);
   
-    if (!rows.length) {
-      await db
+    if (userProfileRows.length) {
+     const rows = await db
+        .update(userDevices)
+        .set(data)
+        .where(eq(userDevices.userId, userId))
+        .returning({ id: userDevices.id });
+      
+      return NextResponse.json(rows[0], { status: 200 });
+    } else {
+      const rows = await db
         .insert(userDevices)
-        .values({ ...data, userId });
+        .values({ ...data, userId })
+        .returning({ id: userDevices.id });
+    
+      return NextResponse.json(rows[0], { status: 200 });
     }
-    return new NextResponse(null, { status: 204 });
   } catch (error) {
-    console.error('[API][POST][users][:id][devices]', error);
+    console.error('[API][POST][users][:id][device]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }

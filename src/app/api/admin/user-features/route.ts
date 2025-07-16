@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { count, desc, asc, SQL, ilike, and, or, eq } from "drizzle-orm";
-import { userProfiles } from "../../../../db/schema";
+import { userFeatures } from "../../../../db/schema";
 import { db } from "../../../../db";
 import { PgColumn } from "drizzle-orm/pg-core";
 
 /**
  * @swagger
- * /api/admin/user-profiles:
+ * /api/admin/user-features:
  *   get:
- *     summary: Find user profiles
+ *     summary: Find user features
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
@@ -37,7 +37,7 @@ export const GET = async (request: NextRequest) => {
 
     const rows = await db
       .select()
-      .from(userProfiles)
+      .from(userFeatures)
       .where(where)
       .orderBy(orderBy)
       .limit(limit)
@@ -45,11 +45,11 @@ export const GET = async (request: NextRequest) => {
 
     const rowsCount = await db
       .select({ count: count() })
-      .from(userProfiles)
+      .from(userFeatures)
       .where(where);
 
     const totalCount = rowsCount[0].count.toString();
-    const contentRange = `user-profiles ${offset}-${limit - 1}/${totalCount}`
+    const contentRange = `user-features ${offset}-${limit - 1}/${totalCount}`
     const response = NextResponse.json(rows, { status: 200 });
       
     response.headers.set('Content-Range', contentRange);
@@ -58,14 +58,14 @@ export const GET = async (request: NextRequest) => {
 
     return response;
   } catch (error) {
-    console.error('[API][GET][Admin][user-profiles]', error);
+    console.error('[API][GET][Admin][user-features]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }
 
 const FIELDS: Record<any, PgColumn<any>> = {
-  id: userProfiles.id,
-  updatedAt: userProfiles.updatedAt,
+  id: userFeatures.id,
+  updatedAt: userFeatures.updatedAt,
 };
 
 const DEFAULT_SORT = ["updatedAt", "DESC"];
@@ -84,7 +84,7 @@ const searchParams = (request: NextRequest): [number, number, SQL<unknown> | und
   const [sortA, sortB] = sort ? JSON.parse(sort) : DEFAULT_SORT;
 
   const sortOrderByFn = sortB === "ASC" ? asc : desc;
-  const sortOrderBy = sortOrderByFn(FIELDS[sortA] || userProfiles.updatedAt);
+  const sortOrderBy = sortOrderByFn(FIELDS[sortA] || userFeatures.updatedAt);
 
   const where = [];
 
@@ -92,13 +92,7 @@ const searchParams = (request: NextRequest): [number, number, SQL<unknown> | und
   const filters = filter ? JSON.parse(filter) : {};
 
   if ('userId' in filters) {
-    where.push(eq(userProfiles.userId, filters.userId));
-  }
-  if ('q' in filters) {
-    where.push(or(
-      ilike(userProfiles.firstName,  `${filters.q}%`),
-      ilike(userProfiles.lastName,  `${filters.q}%`),
-    ));
+    where.push(eq(userFeatures.userId, filters.userId));
   }
   
   return [rangeLimit, rangeOffset, and(...where), sortOrderBy];

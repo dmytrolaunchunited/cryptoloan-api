@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { Button, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, Link, List, SearchInput, SelectColumnsButton, TextField, TopToolbar, useRecordContext, WrapperField } from "react-admin";
+import { Button, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, Link, List, ReferenceArrayField, ReferenceField, SearchInput, SelectColumnsButton, SingleFieldList, TextField, TopToolbar, useRecordContext, WrapperField } from "react-admin";
 import { AdminEmpty } from "./admin-empty";
 
 const filters = [
@@ -13,7 +13,7 @@ const filters = [
 const Actions: FC = memo(() => {
   return (
     <TopToolbar>
-      <SelectColumnsButton preferenceKey="userProfile.table" sx={{
+      <SelectColumnsButton preferenceKey="userFeature.table" sx={{
         '&.MuiButtonBase-root': {
           padding: 1,
           borderRadius: 18,
@@ -53,7 +53,7 @@ const UserButton: FC = memo(() => {
   );
 });
 
-export const AdminUserProfileList: FC = memo(() => {
+export const AdminUserFeatureList: FC = memo(() => {
   const actions = <Actions />;
   const empty = <AdminEmpty />;
 
@@ -66,14 +66,14 @@ export const AdminUserProfileList: FC = memo(() => {
         minHeight: 'auto',
       }
     }}>
-      <DatagridConfigurable preferenceKey="userProfile.table" rowClick={false}>
+      <DatagridConfigurable preferenceKey="userFeature.table" rowClick={false}>
         <TextField source="id" label="ID" />
-        <TextField source="firstName" label="FIRST NAME" />
-        <TextField source="lastName" label="LAST NAME" />
-        <TextField source="citizenshipCountry" label="CITIZENSHIP COUNTRY" />
-        <TextField source="residenceCountry" label="RESIDENCE COUNTRY" />
-
-        <DateField label="DATE OF BIRTH" source="dateOfBirth" showDate />
+        <ReferenceField source="scoringFeatureId" reference="scoring-features" label="SCORING FEATURE">
+          <TextField source="name" />
+        </ReferenceField>
+        <ReferenceField source="scoringConditionId" reference="scoring-conditions" label="SCORING CONDITION">
+          <TextField source="name" />
+        </ReferenceField>
 
         <DateField label="UPDATED AT" source="updatedAt" showTime showDate />
 
