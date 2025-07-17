@@ -1,6 +1,6 @@
 import { Close, Done } from "@mui/icons-material";
 import { FC, memo, useCallback, useMemo } from "react";
-import { BooleanInput, Button, Create, required, SaveButton, SimpleForm, TextInput, Toolbar, useRedirect } from "react-admin";
+import { BooleanInput, Button, Create, NumberInput, required, SaveButton, SelectInput, SimpleForm, TextInput, Toolbar, useRedirect } from "react-admin";
 
 const CreateToolbar: FC = memo(() => {
   const redirect = useRedirect();
@@ -61,6 +61,13 @@ export const AdminApplicationCreate: FC = memo(() => {
         <TextInput size="small" source="name" fullWidth validate={required()} />
         <TextInput size="small" source="uuid" fullWidth validate={required()} />
 
+        <NumberInput size="small" source="scoreValidationMax" validate={required()} />
+        <NumberInput size="small" source="scoreValidationMin" validate={required()} />
+        
+        <SelectInput size="small" source="currency" fullWidth  validate={required()} choices={[
+          { id: 'usdt', name: 'USDT' },
+        ]} />
+        
         <BooleanInput size="small" source="isActive" label="Active" defaultValue={true} fullWidth sx={{
           marginLeft: 1,
         }}/>

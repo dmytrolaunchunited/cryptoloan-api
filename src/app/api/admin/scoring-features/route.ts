@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { count, desc,asc, SQL, and, ilike, sql } from "drizzle-orm";
 import { PgColumn } from "drizzle-orm/pg-core";
-import { scoringFeaturesToScoringConditions, scoringFeatures } from "../../../../db/schema";
+import { scoringFeaturesToScoringConditions, scoringFeatures, applications } from "../../../../db/schema";
 import { db } from "../../../../db";
 
 /**
@@ -44,6 +44,13 @@ export const GET = async (request: NextRequest) => {
         isActive: scoringFeatures.isActive,
         createdAt: scoringFeatures.createdAt,
         updatedAt: scoringFeatures.updatedAt,
+        application: sql`
+          (
+            SELECT row_to_json(${applications})
+            FROM ${applications}
+            WHERE ${applications.id} = ${scoringFeatures.applicationId}
+          )
+        `.as('application'),
         scoringConditions: sql`
           (
             SELECT json_agg(${scoringFeaturesToScoringConditions.scoringConditionId})

@@ -66,16 +66,36 @@ export const AdminUserProfileList: FC = memo(() => {
         minHeight: 'auto',
       }
     }}>
-      <DatagridConfigurable preferenceKey="userProfile.table" rowClick={false}>
+      <DatagridConfigurable preferenceKey="userProfile.table" rowClick={false} rowSx={(i) => {
+        if (i.scoreStatus == 'validating') {
+          return {
+            backgroundColor: 'rgb(255, 193, 7, 0.1)'
+          };
+        }
+        if (i.scoreStatus == 'processing') {
+          return {
+            backgroundColor: 'rgb(76, 175, 80, 0.1)'
+          };
+        }
+        if (i.scoreStatus == 'reject') {
+          return {
+            backgroundColor: 'rgb(239, 83, 80, 0.1)'
+          };
+        }
+        return {};
+      }}>
         <TextField source="id" label="ID" />
         <TextField source="firstName" label="FIRST NAME" />
         <TextField source="lastName" label="LAST NAME" />
         <TextField source="citizenshipCountry" label="CITIZENSHIP COUNTRY" />
         <TextField source="residenceCountry" label="RESIDENCE COUNTRY" />
 
-        <DateField label="DATE OF BIRTH" source="dateOfBirth" showDate />
+        <DateField source="dateOfBirth" label="DATE OF BIRTH" showDate />
 
-        <DateField label="UPDATED AT" source="updatedAt" showTime showDate />
+        <TextField source="score" label="SCORE" />
+        <TextField source="scorePayout" label="SCORE PAYOUT" />
+
+        <DateField source="updatedAt" label="UPDATED AT" showTime showDate />
 
         <WrapperField label="ACTIONS" textAlign="right" sortable={false}>
           <UserButton />

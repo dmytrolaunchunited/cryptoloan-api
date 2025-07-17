@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { BooleanField, CreateButton, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, List, SearchInput, SelectColumnsButton, TextField, TopToolbar, WrapperField } from "react-admin";
+import { BooleanField, CreateButton, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, List, NumberField, SearchInput, SelectColumnsButton, SelectField, TextField, TopToolbar, WrapperField } from "react-admin";
 import { Chip } from '@mui/material';
 import { AdminEmpty } from "./admin-empty";
 
@@ -62,6 +62,13 @@ export const AdminApplicationList: FC = memo(() => {
         <FunctionField label="NAME" render={i => (
           <Chip label={i.name.toUpperCase()}/>
         )} />
+
+        <SelectField source="currency" label="CURRENCY" choices={[
+          { id: 'usdt', name: 'USDT' },
+        ]} />
+
+        <NumberField label="SCORE VALIDATION MAX" source="scoreValidationMax" />
+        <NumberField label="SCORE VALIDATION MIN" source="scoreValidationMin" />
 
         <BooleanField label="ACTIVE" source="isActive" />
 

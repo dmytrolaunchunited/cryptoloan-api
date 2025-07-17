@@ -1,6 +1,6 @@
 import { Close, Done } from "@mui/icons-material";
 import { FC, memo, useCallback, useMemo } from "react";
-import { Button, required, SaveButton, SimpleForm, TextInput, BooleanInput, Toolbar, useRedirect, SelectInput, Edit, ReferenceArrayInput, AutocompleteArrayInput } from "react-admin";
+import { Button, required, SaveButton, SimpleForm, TextInput, BooleanInput, Toolbar, useRedirect, SelectInput, Edit, ReferenceArrayInput, AutocompleteArrayInput, ReferenceInput, AutocompleteInput } from "react-admin";
 
 const EditToolbar: FC = memo(() => {
   const redirect = useRedirect();
@@ -67,6 +67,10 @@ export const AdminScoringFeatureEdit: FC = memo(() => {
         <TextInput disabled size="small" source="id" />
         <TextInput size="small" source="name" fullWidth validate={required()} />
         <TextInput size="small" source="description" fullWidth />
+
+        <ReferenceInput source="applicationId" reference="applications">
+          <AutocompleteInput size="small" validate={required()} optionText={(i) => i.name.toUpperCase()} />
+        </ReferenceInput>
         
         <SelectInput size="small" source="type" validate={required()}  fullWidth choices={[
           { id: 'social', name: 'Social' },

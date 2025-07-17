@@ -69,7 +69,11 @@ export const AdminScoringFeatureList: FC = memo(() => {
         }}
       >
         <TextField source="id" label="ID" />
-        
+         
+        <FunctionField label="APPLICATION" render={i => (
+          <Chip label={i.application.name.toUpperCase()}/>
+        )} />
+
         <FunctionField label="NAME" render={i => (
           <Chip label={i.name}/>
         )} />

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { count, desc, asc, SQL, ilike, and, or, eq } from "drizzle-orm";
-import { userProfiles } from "../../../../db/schema";
+import { count, desc, asc, SQL, ilike, and, or, eq, inArray, isNotNull, sql } from "drizzle-orm";
+import { applications, scoringConditions, scoringFeatures, scoringFeaturesToScoringConditions, scoringPayouts, userFeatures, userProfiles, users } from "../../../../db/schema";
 import { db } from "../../../../db";
 import { PgColumn } from "drizzle-orm/pg-core";
 
@@ -35,13 +35,201 @@ export const GET = async (request: NextRequest) => {
 
     const [limit, offset, where, orderBy] = searchParams(request);
 
-    const rows = await db
-      .select()
+    const userProfileRows = await db
+      .select({
+        id: userProfiles.id,
+        userId: userProfiles.userId,
+        firstName: userProfiles.firstName,
+        lastName: userProfiles.lastName,
+        dateOfBirth: userProfiles.dateOfBirth,
+        citizenshipCountry: userProfiles.citizenshipCountry,
+        residenceCountry: userProfiles.residenceCountry,
+        createdAt: userProfiles.createdAt,
+        updatedAt: userProfiles.updatedAt,
+        user: users,
+        application: applications,
+        userFeatures: sql`
+          (
+            SELECT json_agg(
+              json_build_object(
+                'userFeature', uf.*,
+                'scoringFeature', sf.*,
+                'scoringCondition', sc.*
+              )
+            )
+            FROM ${userFeatures} uf
+            LEFT JOIN ${scoringFeatures} sf ON sf.id = uf.scoring_feature_id
+            LEFT JOIN ${scoringConditions} sc ON sc.id = uf.scoring_condition_id
+            WHERE uf.user_id = ${users.id}
+          )
+        `.as('userFeatures'),
+        age: sql`EXTRACT(YEAR FROM age(${userProfiles.dateOfBirth}))`.as('age'),
+      })
       .from(userProfiles)
+      .leftJoin(users, eq(users.id, userProfiles.userId))
+      .leftJoin(applications, eq(applications.id, users.applicationId))
       .where(where)
       .orderBy(orderBy)
       .limit(limit)
       .offset(offset);
+
+    const scoringFeatureRows = await db
+      .select({
+        scoringFeature: scoringFeatures,
+        scoringCondition: scoringConditions,
+      })
+      .from(scoringFeatures)
+      .leftJoin(scoringFeaturesToScoringConditions, eq(scoringFeaturesToScoringConditions.scoringFeatureId, scoringFeatures.id))
+      .leftJoin(scoringConditions, eq(scoringConditions.id, scoringFeaturesToScoringConditions.scoringConditionId))
+      .where(and(
+        isNotNull(scoringConditions.relation),
+        eq(scoringFeatures.isActive, true),
+        eq(scoringConditions.isActive, true),
+      ));
+
+    const scoringPayoutRows = await db
+      .select()
+      .from(scoringPayouts)
+      .where(eq(scoringPayouts.isActive, true));
+
+    const rows = userProfileRows.map((i: any) => {
+      let scoreStatus = 'waiting';
+      let scorePayout = 0;
+      let score = 0;
+
+      if (i.userFeatures) {
+        for (let q = 0; q < i.userFeatures.length; q++) {
+          if (i.userFeatures[q].scoringFeature.type === 'social') {
+            score += Number(i.userFeatures[q].scoringCondition.value);
+          }
+          if (i.userFeatures[q].scoringFeature.type === 'behavioral') {
+            score -= Number(i.userFeatures[q].scoringCondition.value);
+          }
+        }
+
+        for (let q = 0; q < scoringFeatureRows.length; q++) {
+          if (i.application.id === scoringFeatureRows[q].scoringFeature?.applicationId) {
+            if (scoringFeatureRows[q].scoringCondition?.relation === 'dateOfBirth') {
+              const age = Number(i.age);
+            
+              if (scoringFeatureRows[q].scoringCondition?.condition?.includes('-')) {
+                const [min, max] = scoringFeatureRows[q].scoringCondition?.condition?.split('-')!;
+
+                if (min && max) {
+                  const minNumber = Number(min);
+                  const maxNumber = Number(max);
+                  if (age >= minNumber && maxNumber <= age) {
+                    if (scoringFeatureRows[q].scoringFeature.type === 'social') {
+                      score += Number(scoringFeatureRows[q].scoringCondition?.value);
+                      continue;
+                    }
+                    if (scoringFeatureRows[q].scoringFeature.type === 'behavioral') {
+                      score -= Number(scoringFeatureRows[q].scoringCondition?.value);
+                      continue;
+                    }
+                  }
+                }
+                if (min && !max) {
+                  const minNumber = Number(min);
+                  if (age <= minNumber) {
+                    if (scoringFeatureRows[q].scoringFeature.type === 'social') {
+                      score += Number(scoringFeatureRows[q].scoringCondition?.value);
+                      continue;
+                    }
+                    if (scoringFeatureRows[q].scoringFeature.type === 'behavioral') {
+                      score -= Number(scoringFeatureRows[q].scoringCondition?.value);
+                      continue;
+                    }
+                  }
+                }
+              } 
+              if (scoringFeatureRows[q].scoringCondition?.condition?.includes('+')) {
+                const [min] = scoringFeatureRows[q].scoringCondition?.condition?.split('+')!;
+                const minNumber = Number(min);
+                if (age >= minNumber) {
+                  if (scoringFeatureRows[q].scoringFeature.type === 'social') {
+                    score += Number(scoringFeatureRows[q].scoringCondition?.value);
+                    continue;
+                  }
+                  if (scoringFeatureRows[q].scoringFeature.type === 'behavioral') {
+                    score -= Number(scoringFeatureRows[q].scoringCondition?.value);
+                    continue;
+                  }
+                }
+              }
+  
+              if (scoringFeatureRows[q].scoringFeature.type === 'social') {
+                score += Number(scoringFeatureRows[q].scoringCondition?.value);
+                continue;
+              }
+              if (scoringFeatureRows[q].scoringFeature.type === 'behavioral') {
+                score -= Number(scoringFeatureRows[q].scoringCondition?.value);
+                continue;
+              }
+            }
+          }
+        }
+
+        for (let q = 0; q < scoringPayoutRows.length; q++) {
+          if (i.application.id === scoringPayoutRows[q].applicationId) {
+            if (scoringPayoutRows[q].condition?.includes('-')) {
+              const [min, max] = scoringPayoutRows[q].condition?.split('-')!;
+
+              if (min && max) {
+                const minNumber = Number(min);
+                const maxNumber = Number(max);
+                if (score >= minNumber && maxNumber <= score) {
+                  scorePayout = Number(scoringPayoutRows[q].value);
+                  continue;
+                }
+              }
+              if (min && !max) {
+                const minNumber = Number(min);
+                if (score <= minNumber) {
+                  scorePayout = Number(scoringPayoutRows[q].value);
+                  continue;
+                }
+              }
+            }
+            if (scoringPayoutRows[q].condition?.includes('+')) {
+              const [min] = scoringPayoutRows[q].condition?.split('+')!;
+              const minNumber = Number(min);
+              if (score >= minNumber) {
+                scorePayout = Number(scoringPayoutRows[q].value);
+                continue;
+              }
+            }
+          }
+        }
+      }
+
+      const min = Number(i.application.scoreValidationMin);
+      const max = Number(i.application.scoreValidationMax);
+      if (score < min) {
+        scoreStatus = 'reject';
+      }
+      if (score >= min && score < max) {
+        scoreStatus = 'validating';
+      }
+      if (score >= max) {
+        scoreStatus = 'processing';
+      }
+
+      return {
+        id: i.id,
+        userId: i.userId,
+        firstName: i.firstName,
+        lastName: i.lastName,
+        dateOfBirth: i.dateOfBirth,
+        citizenshipCountry: i.citizenshipCountry,
+        residenceCountry: i.residenceCountry,
+        createdAt: i.createdAt,
+        updatedAt: i.updatedAt,
+        score,
+        scoreStatus,
+        scorePayout,
+      };
+    });
 
     const rowsCount = await db
       .select({ count: count() })

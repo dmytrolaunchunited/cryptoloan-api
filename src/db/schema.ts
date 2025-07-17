@@ -42,6 +42,7 @@ export const scoringFeaturesToScoringConditionsRelations = relations(scoringFeat
 
 export const scoringFeatures = pgTable("scoring_features", {
   id: serial('id').primaryKey(),
+  applicationId: integer('application_id').references(() => applications.id),
   name: varchar(),
   type: varchar(),
   description: varchar(),
@@ -50,7 +51,8 @@ export const scoringFeatures = pgTable("scoring_features", {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
-export const scoringFeaturesRelations = relations(scoringFeatures, ({ many }) => ({
+export const scoringFeaturesRelations = relations(scoringFeatures, ({ one, many }) => ({
+  application: one(applications),
   scoringFeaturesToScoringConditions: many(scoringFeaturesToScoringConditions),
 }));
 
@@ -151,6 +153,9 @@ export const applications = pgTable('applications', {
   id: serial('id').primaryKey(),
   name: varchar(),
   uuid: varchar(),
+  currency: varchar(),
+  scoreValidationMax: varchar(),
+  scoreValidationMin: varchar(),
   isActive: boolean('is_active').default(true),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),

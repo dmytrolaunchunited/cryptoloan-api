@@ -1,5 +1,5 @@
 import { db } from "../../../../../db";
-import { scoringFeatures, scoringFeaturesToScoringConditions } from "../../../../../db/schema";
+import { applications, scoringFeatures, scoringFeaturesToScoringConditions } from "../../../../../db/schema";
 import { NextResponse, NextRequest } from "next/server";
 import { eq, inArray, sql } from "drizzle-orm";
 
@@ -44,6 +44,14 @@ export const GET = async (request: NextRequest, context: any) => {
         isActive: scoringFeatures.isActive,
         createdAt: scoringFeatures.createdAt,
         updatedAt: scoringFeatures.updatedAt,
+        applicationId: scoringFeatures.applicationId,
+        application: sql`
+          (
+            SELECT row_to_json(${applications})
+            FROM ${applications}
+            WHERE ${applications.id} = ${scoringFeatures.applicationId}
+          )
+        `.as('application'),
         scoringConditions: sql`
           (
             SELECT json_agg(${scoringFeaturesToScoringConditions.scoringConditionId})
