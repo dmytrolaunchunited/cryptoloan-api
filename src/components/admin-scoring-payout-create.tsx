@@ -64,7 +64,7 @@ export const AdminScoringPayoutCreate: FC = memo(() => {
         <NumberInput size="small" source="value" fullWidth validate={required()} />
 
         <ReferenceInput source="applicationId" reference="applications">
-          <AutocompleteInput size="small" validate={required()} optionText={(i) => i.name.toUpperCase()} />
+          <AutocompleteInput size="small" validate={required()} optionText={(i) => i.name} />
         </ReferenceInput>
 
         <BooleanInput size="small" source="isActive" label="Active" defaultValue={true} fullWidth sx={{

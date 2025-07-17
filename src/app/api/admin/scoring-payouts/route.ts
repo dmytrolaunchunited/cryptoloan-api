@@ -45,6 +45,7 @@ export const GET = async (request: NextRequest) => {
         isActive: scoringPayouts.isActive,
         createdAt: scoringPayouts.createdAt,
         updatedAt: scoringPayouts.updatedAt,
+        applicationId: scoringPayouts.applicationId,
         application: sql`
           (
             SELECT row_to_json(${applications})

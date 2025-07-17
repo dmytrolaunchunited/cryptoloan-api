@@ -43,6 +43,7 @@ export const GET = async (request: NextRequest) => {
         isActive: scoringQuestions.isActive,
         createdAt: scoringQuestions.createdAt,
         updatedAt: scoringQuestions.updatedAt,
+        applicationId: scoringQuestions.applicationId,
         application: sql`
           (
             SELECT row_to_json(${applications})

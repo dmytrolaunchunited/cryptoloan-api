@@ -62,7 +62,7 @@ export const AdminScoringQuestionCreate: FC = memo(() => {
         <TextInput size="small" source="description" fullWidth />
         
         <ReferenceInput source="applicationId" reference="applications">
-          <AutocompleteInput size="small" validate={required()} optionText={(i) => i.name.toUpperCase()} />
+          <AutocompleteInput size="small" validate={required()} optionText={(i) => i.name} />
         </ReferenceInput>
 
         <ReferenceArrayInput source="scoringFeatures" reference="scoring-features">
