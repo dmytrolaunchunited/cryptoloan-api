@@ -43,6 +43,7 @@ export const GET = async (request: NextRequest) => {
         email: users.email,
         createdAt: users.createdAt,
         updatedAt: users.updatedAt,
+        applicationId: users.applicationId,
         application: sql`
           (
             SELECT row_to_json(${applications})

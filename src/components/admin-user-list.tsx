@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { Button, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, Link, List, SearchInput, SelectColumnsButton, TextField, TopToolbar, useRecordContext, WrapperField } from "react-admin";
+import { Button, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, Link, List, ReferenceField, SearchInput, SelectColumnsButton, TextField, TopToolbar, useRecordContext, WrapperField } from "react-admin";
 import { Chip } from '@mui/material';
 import { AdminEmpty } from "./admin-empty";
 
@@ -131,9 +131,9 @@ export const AdminUserList: FC = memo(() => {
           );
         }} />
 
-        <FunctionField label="APPLICATION" render={i => (
-          <Chip label={i.application.name.toUpperCase()}/>
-        )} />
+        <ReferenceField source="applicationId" reference="applications" label="APPLICATION">
+          <TextField source="name" />
+        </ReferenceField>
 
         <DateField label="UPDATED AT" source="updatedAt" showTime showDate />
 
