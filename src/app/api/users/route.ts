@@ -104,25 +104,32 @@ export const POST = async (request: NextRequest) => {
     const applicationId = applicationRow.id;
 
     const data = await request.json();
+    const { id: privy, email, phone } = data;
 
     const userRows = await db
       .select()
       .from(users)
-      .where(eq(users.privy, data.privy))
+      .where(and(
+        eq(users.privy, privy),
+        eq(users.applicationId, applicationId),
+      ))
       .limit(1);
   
     if (userRows.length) {
       const rows = await db
         .update(users)
-        .set(data)
-        .where(and(eq(users.privy, data.privy), eq(users.applicationId, applicationId)))
+        .set({ privy, email, phone })
+        .where(and(
+          eq(users.privy, privy),
+          eq(users.applicationId, applicationId),
+        ))
         .returning({ id: users.id });
 
       return NextResponse.json(rows[0], { status: 200 });
     } else {
       const rows = await db
         .insert(users)
-        .values({ ...data, applicationId })
+        .values({ privy, email, phone, applicationId })
         .returning({ id: users.id });
 
       return NextResponse.json(rows[0], { status: 200 });

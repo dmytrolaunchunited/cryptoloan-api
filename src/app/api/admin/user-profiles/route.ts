@@ -93,7 +93,7 @@ export const GET = async (request: NextRequest) => {
       .where(eq(scoringPayouts.isActive, true));
 
     const rows = userProfileRows.map((i: any) => {
-      let scoreStatus = 'waiting';
+      let scoreStatus = 'invite';
       let scorePayout = 0;
       let score = 0;
 
@@ -209,12 +209,12 @@ export const GET = async (request: NextRequest) => {
         scoreStatus = 'reject';
       }
       if (score >= min && score < max) {
-        scoreStatus = 'validating';
+        scoreStatus = 'review';
       }
       if (score >= max) {
-        scoreStatus = 'processing';
+        scoreStatus = 'accept';
       }
-
+      //verify
       return {
         id: i.id,
         userId: i.userId,

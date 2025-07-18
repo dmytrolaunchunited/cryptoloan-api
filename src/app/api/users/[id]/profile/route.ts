@@ -100,7 +100,7 @@ export const GET = async (request: NextRequest, context: any) => {
 
       const row = rows[0]! as any;
 
-      let scoreStatus = 'waiting';
+      let scoreStatus = 'invite';
       let scorePayout = 0;
       let score = 0;
 
@@ -216,12 +216,12 @@ export const GET = async (request: NextRequest, context: any) => {
         scoreStatus = 'reject';
       }
       if (score >= min && score < max) {
-        scoreStatus = 'validating';
+        scoreStatus = 'review';
       }
       if (score >= max) {
-        scoreStatus = 'processing';
+        scoreStatus = 'accept';
       }
-      const scorePayoutCurrency = row.application?.currency;
+      //verify
       return NextResponse.json({
         id: row.id,
         userId: row.userId,
@@ -230,7 +230,6 @@ export const GET = async (request: NextRequest, context: any) => {
         score,
         scoreStatus,
         scorePayout,
-        scorePayoutCurrency,
       }, { status: 200 });
     }
     return NextResponse.json(null, { status: 200 });
@@ -286,7 +285,7 @@ export const POST = async (request: NextRequest, context: any) => {
     const userId = params.id;
 
     const data = await request.json();
-    console.log(data);
+
     const userProfileRows = await db
       .select()
       .from(userProfiles)

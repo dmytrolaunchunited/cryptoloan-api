@@ -67,12 +67,12 @@ export const AdminUserProfileList: FC = memo(() => {
       }
     }}>
       <DatagridConfigurable preferenceKey="userProfile.table" rowClick={false} rowSx={(i) => {
-        if (i.scoreStatus == 'validating') {
+        if (i.scoreStatus == 'verify') {
           return {
             backgroundColor: 'rgb(255, 193, 7, 0.1)'
           };
         }
-        if (i.scoreStatus == 'processing') {
+        if (i.scoreStatus == 'accept') {
           return {
             backgroundColor: 'rgb(76, 175, 80, 0.1)'
           };
