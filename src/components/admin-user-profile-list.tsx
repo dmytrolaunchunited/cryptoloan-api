@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { Button, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, Link, List, SearchInput, SelectColumnsButton, TextField, TopToolbar, useRecordContext, WrapperField } from "react-admin";
+import { Button, DatagridConfigurable, DateField, DeleteButton, EditButton, ExportButton, FunctionField, Link, List, SearchInput, SelectColumnsButton, TextField, TopToolbar, useRecordContext, WrapperField } from "react-admin";
 import { AdminEmpty } from "./admin-empty";
 
 const filters = [
@@ -67,7 +67,7 @@ export const AdminUserProfileList: FC = memo(() => {
       }
     }}>
       <DatagridConfigurable preferenceKey="userProfile.table" rowClick={false} rowSx={(i) => {
-        if (i.scoreStatus == 'verify') {
+        if (i.scoreStatus == 'review') {
           return {
             backgroundColor: 'rgb(255, 193, 7, 0.1)'
           };
@@ -93,7 +93,9 @@ export const AdminUserProfileList: FC = memo(() => {
         <DateField source="dateOfBirth" label="DATE OF BIRTH" showDate />
 
         <TextField source="score" label="SCORE" />
-        <TextField source="scorePayout" label="SCORE PAYOUT" />
+        <FunctionField source="scorePayout" label="SCORE PAYOUT" render={i => (
+          `${i.scorePayout} USDT`
+        )}/>
 
         <DateField source="updatedAt" label="UPDATED AT" showTime showDate />
 

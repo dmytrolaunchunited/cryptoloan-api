@@ -65,7 +65,7 @@ export const AdminApplicationCreate: FC = memo(() => {
         <NumberInput size="small" source="scoreValidationMin" validate={required()} />
         
         <SelectInput size="small" source="currency" fullWidth  validate={required()} choices={[
-          { id: 'usdt', name: 'USDT' },
+          { id: 'ngn', name: 'NGN' },
         ]} />
         
         <BooleanInput size="small" source="isActive" label="Active" defaultValue={true} fullWidth sx={{

@@ -64,7 +64,7 @@ export const AdminApplicationList: FC = memo(() => {
         )} />
 
         <SelectField source="currency" label="CURRENCY" choices={[
-          { id: 'usdt', name: 'USDT' },
+          { id: 'ngn', name: 'NGN' },
         ]} />
 
         <NumberField label="SCORE VALIDATION MAX" source="scoreValidationMax" />
