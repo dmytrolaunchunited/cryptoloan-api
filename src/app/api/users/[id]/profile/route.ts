@@ -46,8 +46,6 @@ export const GET = async (request: NextRequest, context: any) => {
       .select({
         id: userProfiles.id,
         userId: userProfiles.userId,
-        firstName: userProfiles.firstName,
-        lastName: userProfiles.lastName,
         dateOfBirth: userProfiles.dateOfBirth,
         citizenshipCountry: userProfiles.citizenshipCountry,
         residenceCountry: userProfiles.residenceCountry,
@@ -225,8 +223,6 @@ export const GET = async (request: NextRequest, context: any) => {
       return NextResponse.json({
         id: row.id,
         userId: row.userId,
-        firstName: row.firstName,
-        lastName: row.lastName,
         score,
         scoreStatus,
         scorePayout,
@@ -253,7 +249,7 @@ export const GET = async (request: NextRequest, context: any) => {
  *         application/json:
  *           example:
  *             ipAddress: '192.168.1.1'
- *             firstName: 'Test'
+ *             email: 'test@gmail.com'
  *     responses:
  *       400:
  *         description: bad request
