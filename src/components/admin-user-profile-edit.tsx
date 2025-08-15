@@ -66,8 +66,6 @@ export const AdminUserProfileEdit: FC = memo(() => {
         paddingBottom: 0,
       }}>
         <TextInput disabled size="small" source="id" />
-        <TextInput size="small" source="firstName" />
-        <TextInput size="small" source="lastName" />
         <TextInput size="small" source="citizenshipCountry" />
         <TextInput size="small" source="residenceCountry" />
 

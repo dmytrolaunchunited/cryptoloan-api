@@ -85,8 +85,6 @@ export const AdminUserProfileList: FC = memo(() => {
         return {};
       }}>
         <TextField source="id" label="ID" />
-        <TextField source="firstName" label="FIRST NAME" />
-        <TextField source="lastName" label="LAST NAME" />
         <TextField source="citizenshipCountry" label="CITIZENSHIP COUNTRY" />
         <TextField source="residenceCountry" label="RESIDENCE COUNTRY" />
 

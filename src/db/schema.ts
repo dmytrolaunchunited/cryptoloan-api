@@ -140,8 +140,6 @@ export const usersRelations = relations(users, ({ one, many }) => ({
 export const userProfiles = pgTable('user_profiles', {
   id: serial('id').primaryKey(),
   userId: integer('user_id').references(() => users.id),
-  firstName: varchar('first_name'),
-  lastName: varchar('last_name'),
   dateOfBirth: date('date_of_birth'),
   citizenshipCountry: varchar('citizenship_country'),
   residenceCountry: varchar('residence_country'),

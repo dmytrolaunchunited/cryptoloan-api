@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { count, desc, asc, SQL, ilike, and, or, eq, inArray, isNotNull, sql } from "drizzle-orm";
+import { count, desc, asc, SQL, and, eq, isNotNull, sql } from "drizzle-orm";
 import { applications, scoringConditions, scoringFeatures, scoringFeaturesToScoringConditions, scoringPayouts, userFeatures, userProfiles, users } from "../../../../db/schema";
 import { db } from "../../../../db";
 import { PgColumn } from "drizzle-orm/pg-core";
@@ -39,8 +39,6 @@ export const GET = async (request: NextRequest) => {
       .select({
         id: userProfiles.id,
         userId: userProfiles.userId,
-        firstName: userProfiles.firstName,
-        lastName: userProfiles.lastName,
         dateOfBirth: userProfiles.dateOfBirth,
         citizenshipCountry: userProfiles.citizenshipCountry,
         residenceCountry: userProfiles.residenceCountry,
@@ -218,8 +216,6 @@ export const GET = async (request: NextRequest) => {
       return {
         id: i.id,
         userId: i.userId,
-        firstName: i.firstName,
-        lastName: i.lastName,
         dateOfBirth: i.dateOfBirth,
         citizenshipCountry: i.citizenshipCountry,
         residenceCountry: i.residenceCountry,
@@ -281,12 +277,6 @@ const searchParams = (request: NextRequest): [number, number, SQL<unknown> | und
 
   if ('userId' in filters) {
     where.push(eq(userProfiles.userId, filters.userId));
-  }
-  if ('q' in filters) {
-    where.push(or(
-      ilike(userProfiles.firstName,  `${filters.q}%`),
-      ilike(userProfiles.lastName,  `${filters.q}%`),
-    ));
   }
   
   return [rangeLimit, rangeOffset, and(...where), sortOrderBy];
