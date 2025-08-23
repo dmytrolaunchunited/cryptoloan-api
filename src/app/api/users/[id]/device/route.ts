@@ -17,7 +17,7 @@ import { eq } from "drizzle-orm";
  *         application/json:
  *           example:
  *             ipAddress: '192.168.1.1'
- *             firstName: 'Test'
+ *             email: 'test@gmail.com'
  *     responses:
  *       400:
  *         description: bad request
