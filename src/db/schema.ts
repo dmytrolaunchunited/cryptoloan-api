@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, serial, timestamp, varchar, integer, date, boolean, primaryKey } from "drizzle-orm/pg-core";
+import { pgTable, serial, timestamp, varchar, integer, date, boolean, primaryKey, text } from "drizzle-orm/pg-core";
 
 export const scoringConditions = pgTable("scoring_conditions", {
   id: serial('id').primaryKey(),
@@ -126,6 +126,7 @@ export const users = pgTable('users', {
   privy: varchar(),
   email: varchar(),
   phone: varchar(),
+  qoreid: text(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
