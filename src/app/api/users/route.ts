@@ -1,78 +1,77 @@
 import { NextResponse, NextRequest } from "next/server";
-import { eq, and } from "drizzle-orm";
+import { eq, and, like } from "drizzle-orm";
 import { db } from "../../../db";
 import { applications, users } from "../../../db/schema";
 
-/**
- * @swagger
- * /api/users:
- *   get:
- *     summary: Find privy user
- *     security:
- *       - ApiKeyAuth: []   
- *     tags:
- *       - user
- *     responses:
- *       400:
- *         description: bad request
- *       403:
- *         description: forbidden
- *       401:
- *         description: unauthorized
- *       200:
- *         description: success
- */
-export const GET = async (request: NextRequest, context: any) => {
-  try {
-    const apiKey = request.headers.get('X-API-KEY');
-    if (!apiKey) {
-      return new NextResponse('Unauthorized', { status: 401 });
-    }
+// /**
+//  * @swagger
+//  * /api/users:
+//  *   patch:
+//  *     summary: Find user
+//  *     security:
+//  *       - ApiKeyAuth: []   
+//  *     tags:
+//  *       - user
+//  *     responses:
+//  *       400:
+//  *         description: bad request
+//  *       403:
+//  *         description: forbidden
+//  *       401:
+//  *         description: unauthorized
+//  *       200:
+//  *         description: success
+//  */
+// export const PATCH = async (request: NextRequest) => {
+//   try {
+//     const apiKey = request.headers.get('X-API-KEY');
+//     if (!apiKey) {
+//       return new NextResponse('Unauthorized', { status: 401 });
+//     }
 
-    const applicationRows = await db
-      .select()
-      .from(applications)
-      .where(eq(applications.uuid, apiKey))
-      .limit(1);
+//     const applicationRows = await db
+//       .select()
+//       .from(applications)
+//       .where(eq(applications.uuid, apiKey))
+//       .limit(1);
 
-    if (!applicationRows.length) {
-      return new NextResponse('Forbidden', { status: 403 });
-    }
+//     if (!applicationRows.length) {
+//       return new NextResponse('Forbidden', { status: 403 });
+//     }
 
-    const applicationRow = applicationRows[0];
-    const applicationId = applicationRow.id;
+//     const applicationRow = applicationRows[0];
+//     const applicationId = applicationRow.id;
 
-    const { searchParams } = new URL(request.url);
+//     const data = await request.json();
+//     const { authData, authProvider } = data;
+//     const authDataJson = JSON.parse(authData || '{}');
 
-    const privy = searchParams.get("privy");
+//     const rows = await db
+//       .select()
+//       .from(users)
+//       .where(and(
+//         like(users.authData, `%${authDataJson.id!}%`),
+//         eq(users.authProvider, authProvider!),
+//         eq(users.applicationId, applicationId),
+//       ))
+//       .limit(1);
 
-    const rows = await db
-      .select()
-      .from(users)
-      .where(and(eq(users.privy, privy!), eq(users.applicationId, applicationId)))
-      .limit(1);
-
-    return NextResponse.json(rows[0], { status: 200 });
-  } catch (error) {
-    console.error('[API][GET][users][:id]', error);
-    return new NextResponse('Bad Request', { status: 400 });
-  }
-}
+//     return NextResponse.json(rows[0], { status: 200 });
+//   } catch (error) {
+//     console.error('[API][PATCH][users][:id]', error);
+//     return new NextResponse('Bad Request', { status: 400 });
+//   }
+// }
 
 /**
  * @swagger
  * /api/users:
  *   post:
- *     summary: Upsert privy user
+ *     summary: Upsert user
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
  *       - user
- *     requestBody:
- *       content:
- *         application/json:
- *           example:
- *             privy: cmcch0i1t01cel50nj19qd2eo
  *     responses:
  *       400:
  *         description: bad request
@@ -104,13 +103,15 @@ export const POST = async (request: NextRequest) => {
     const applicationId = applicationRow.id;
 
     const data = await request.json();
-    const { id: privy, email, phone } = data;
+    const { authProvider, authData } = data;
+    const authDataJson = JSON.parse(authData || '{}');
 
     const userRows = await db
       .select()
       .from(users)
       .where(and(
-        eq(users.privy, privy),
+        like(users.authData, `%${authDataJson.id}`),
+        eq(users.authProvider, authProvider),
         eq(users.applicationId, applicationId),
       ))
       .limit(1);
@@ -118,9 +119,14 @@ export const POST = async (request: NextRequest) => {
     if (userRows.length) {
       const rows = await db
         .update(users)
-        .set({ privy, email, phone })
+        .set({
+          authData: authData,
+          email: authDataJson.email,
+          phone: authDataJson.phone
+        })
         .where(and(
-          eq(users.privy, privy),
+          like(users.authData, `%${authDataJson.id}`),
+          eq(users.authProvider, authProvider),
           eq(users.applicationId, applicationId),
         ))
         .returning({ id: users.id });
@@ -129,7 +135,13 @@ export const POST = async (request: NextRequest) => {
     } else {
       const rows = await db
         .insert(users)
-        .values({ privy, email, phone, applicationId })
+        .values({
+          authData,
+          authProvider,
+          applicationId,
+          email: authDataJson.email,
+          phone: authDataJson.phone,
+        })
         .returning({ id: users.id });
 
       return NextResponse.json(rows[0], { status: 200 });

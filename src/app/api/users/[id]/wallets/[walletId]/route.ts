@@ -3,12 +3,6 @@ import { applications, users } from "../../../../../../db/schema";
 import { NextResponse, NextRequest } from "next/server";
 import { eq } from "drizzle-orm";
 
-// async function exchange() {
-//   const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=eth');
-//   const data = await response.json();
-//   return data.tether.eth;
-// }
-
 /**
  * @swagger
  * /api/users/{userId}/wallets/{walletId}:
@@ -77,8 +71,8 @@ export const GET = async (request: NextRequest, context: any) => {
     const walletData = await walletResponse.json();
 
     const walletBalanceURL = new URL(`https://api.privy.io/v1/wallets/${params.walletId}/balance`);
-    walletBalanceURL.searchParams.append('chain', "ethereum");
-    walletBalanceURL.searchParams.append('asset', "usdt");
+    walletBalanceURL.searchParams.append('chain', "base");
+    walletBalanceURL.searchParams.append('asset', "usdc");
     const walletBalanceResponse = await fetch(walletBalanceURL.toString(), {
       method: 'GET',
       headers: {

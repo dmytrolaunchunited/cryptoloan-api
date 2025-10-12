@@ -115,13 +115,17 @@ export const PUT = async (request: NextRequest, context: any) => {
     }
 
     const data = await request.json();
+    const { checkData, checkProvider } = data;
 
     const rows = await db
       .update(users)
-      .set(data)
+      .set({
+        checkData,
+        checkProvider,
+      })
       .where(and(
-      eq(users.id, id),
-      eq(users.applicationId, applicationId)
+        eq(users.id, id),
+        eq(users.applicationId, applicationId)
       ))
       .returning({ id: users.id });
 

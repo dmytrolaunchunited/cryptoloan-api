@@ -38,7 +38,8 @@ export const GET = async (request: NextRequest) => {
     const rows = await db
       .select({
         id: users.id,
-        privy: users.privy,
+        authProvider: users.authProvider,
+        authData: users.authData,
         phone: users.phone,
         email: users.email,
         createdAt: users.createdAt,

@@ -92,7 +92,7 @@ export const AdminUserProfileList: FC = memo(() => {
 
         <TextField source="score" label="SCORE" />
         <FunctionField source="scorePayout" label="SCORE PAYOUT" render={i => (
-          `${i.scorePayout} USDT`
+          `${i.scorePayout}`
         )}/>
 
         <DateField source="updatedAt" label="UPDATED AT" showTime showDate />

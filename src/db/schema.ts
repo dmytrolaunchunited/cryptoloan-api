@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, serial, timestamp, varchar, integer, date, boolean, primaryKey, text } from "drizzle-orm/pg-core";
+import { pgTable, serial, timestamp, varchar, integer, date, boolean, primaryKey, text, numeric } from "drizzle-orm/pg-core";
 
 export const scoringConditions = pgTable("scoring_conditions", {
   id: serial('id').primaryKey(),
@@ -123,10 +123,12 @@ export const userFeaturesRelations = relations(userFeatures, ({ one }) => ({
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
   applicationId: integer('application_id').references(() => applications.id),
-  privy: varchar(),
+  authProvider: varchar('auth_provider'),
+  authData: text('auth_data'),
+  checkProvider: varchar('check_provider'),
+  checkData: text('check_data'),
   email: varchar(),
   phone: varchar(),
-  qoreid: text(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
@@ -136,7 +138,59 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   application: one(applications),
   userDevices: one(userDevices),
   userFeatures: many(userFeatures),
+  userPayments: many(userPayments),
+  userLoans: many(userLoans),
 }));
+
+export const userLoans = pgTable('user_loans', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').references(() => users.id),
+  amount: numeric(),
+  repayment: varchar(),
+  total: numeric(),
+  term: numeric(), // months
+  interest: numeric(), // day
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const userLoansRelations = relations(userLoans, ({ one, many }) => ({
+  user: one(users),
+  userLoanTransactions: many(userLoans),
+}));
+
+export const userLoanTransactions = pgTable('user_loan_transaction', {
+  id: serial('id').primaryKey(),
+  userLoanId: integer('user_loan_id').references(() => userLoans.id),
+  status: varchar(),
+  data: text(),
+  dataReceipt: text(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const userPayments = pgTable('user_payments', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').references(() => users.id),
+  // to do...
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const userPaymentsRelations = relations(userPayments, ({ one, many }) => ({
+  user: one(users),
+  userPaymentTransactions: many(userPayments),
+}));
+
+export const userPaymentTransactions = pgTable('user_payment_transaction', {
+  id: serial('id').primaryKey(),
+  userPaymentId: integer('user_payment_id').references(() => userLoans.id),
+  status: varchar(),
+  data: text(),
+  dataReceipt: text(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
 
 export const userProfiles = pgTable('user_profiles', {
   id: serial('id').primaryKey(),
@@ -153,6 +207,8 @@ export const applications = pgTable('applications', {
   name: varchar(),
   uuid: varchar(),
   currency: varchar(),
+  stablecoin: varchar(),
+  interest: numeric(),
   scoreValidationMax: varchar(),
   scoreValidationMin: varchar(),
   isActive: boolean('is_active').default(true),
