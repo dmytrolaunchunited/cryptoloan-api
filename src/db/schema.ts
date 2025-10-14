@@ -146,6 +146,7 @@ export const userLoans = pgTable('user_loans', {
   id: serial('id').primaryKey(),
   userId: integer('user_id').references(() => users.id),
   amount: numeric(),
+  status: varchar(),
   repayment: varchar(),
   total: numeric(),
   term: numeric(), // months
@@ -156,15 +157,16 @@ export const userLoans = pgTable('user_loans', {
 
 export const userLoansRelations = relations(userLoans, ({ one, many }) => ({
   user: one(users),
+  userPayments: many(userPayments),
   userLoanTransactions: many(userLoans),
 }));
 
 export const userLoanTransactions = pgTable('user_loan_transaction', {
   id: serial('id').primaryKey(),
   userLoanId: integer('user_loan_id').references(() => userLoans.id),
-  status: varchar(),
-  data: text(),
-  dataReceipt: text(),
+  wallet: text(),
+  transaction: text(),
+  transactionReceipt: text(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
@@ -172,22 +174,27 @@ export const userLoanTransactions = pgTable('user_loan_transaction', {
 export const userPayments = pgTable('user_payments', {
   id: serial('id').primaryKey(),
   userId: integer('user_id').references(() => users.id),
-  // to do...
+  userLoanId: integer('user_loan_id').references(() => userLoans.id),
+  uuid: varchar(),
+  status: varchar(),
+  amount: numeric(),
+  paymentAt: timestamp('payment_at').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
 export const userPaymentsRelations = relations(userPayments, ({ one, many }) => ({
   user: one(users),
+  userLoan: one(userLoans),
   userPaymentTransactions: many(userPayments),
 }));
 
 export const userPaymentTransactions = pgTable('user_payment_transaction', {
   id: serial('id').primaryKey(),
   userPaymentId: integer('user_payment_id').references(() => userLoans.id),
-  status: varchar(),
-  data: text(),
-  dataReceipt: text(),
+  wallet: text(),
+  transaction: text(),
+  transactionReceipt: text(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });

@@ -6,7 +6,7 @@ import { db } from "../../../../db";
 
 /**
  * @swagger
- * /api/admin/applications:
+ * /api/admin/apps:
  *   get:
  *     summary: Find applications
  *     security:
@@ -58,7 +58,7 @@ export const GET = async (request: NextRequest) => {
 
     return response;
   } catch (error) {
-    console.error('[API][GET][Admin][applications]', error);
+    console.error('[API][GET][Admin][apps]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }
@@ -99,7 +99,7 @@ const searchParams = (request: NextRequest): [number, number, SQL<unknown> | und
 
 /**
  * @swagger
- * /api/admin/applications:
+ * /api/admin/apps:
  *   post:
  *     summary: Create application
  *     security:
@@ -134,7 +134,7 @@ export const POST = async (request: NextRequest) => {
 
     return NextResponse.json(rows[0], { status: 201 });
   } catch (error) {
-    console.error('[API][POST][Admin][applications][:id]', error);
+    console.error('[API][POST][Admin][apps][:id]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }

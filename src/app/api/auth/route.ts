@@ -50,7 +50,7 @@ export const POST = async (request: NextRequest) => {
       .select()
       .from(users)
       .where(and(
-        like(users.authData, `%${authDataJson.id!}%`),
+        like(users.authData, `%${authDataJson.id}%`),
         eq(users.authProvider, authProvider!),
         eq(users.applicationId, applicationId),
       ))

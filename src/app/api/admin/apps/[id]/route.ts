@@ -5,9 +5,9 @@ import { eq } from "drizzle-orm";
 
 /**
  * @swagger
- * /api/admin/applications/{id}:
+ * /api/admin/apps/{id}:
  *   get:
- *     summary: Find user
+ *     summary: Find application
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:
@@ -43,14 +43,14 @@ export const GET = async (request: NextRequest, context: any) => {
 
     return NextResponse.json(rows[0], { status: 200 });
   } catch (error) {
-    console.error('[API][GET][Admin][applications][:id]', error);
+    console.error('[API][GET][Admin][apps][:id]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }
 
 /**
  * @swagger
- * /api/admin/applications/{id}:
+ * /api/admin/apps/{id}:
  *   delete:
  *     summary: Delete application
  *     security:
@@ -87,14 +87,14 @@ export const DELETE = async (request: NextRequest, context: any) => {
 
     return NextResponse.json(rows[0], { status: 200 });
   } catch (error) {
-    console.error('[API][DELETE][Admin][applications[:id]', error);
+    console.error('[API][DELETE][Admin][apps[:id]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }
 
 /**
  * @swagger
- * /api/admin/applications/{id}:
+ * /api/admin/apps/{id}:
  *   put:
  *     summary: Update application
  *     security:
@@ -134,7 +134,7 @@ export const PUT = async (request: NextRequest, context: any) => {
 
     return NextResponse.json(rows[0], { status: 200 });
   } catch (error) {
-    console.error('[API][PUT][Admin][applications][:id]', error);
+    console.error('[API][PUT][Admin][apps][:id]', error);
     return new NextResponse('Bad Request', { status: 400 });
   }
 }

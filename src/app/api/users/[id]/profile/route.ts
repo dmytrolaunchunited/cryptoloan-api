@@ -1,5 +1,5 @@
 import { db } from "../../../../../db";
-import { applications, scoringConditions, scoringFeatures, scoringFeaturesToScoringConditions, scoringPayouts, userFeatures, userProfiles, users } from "../../../../../db/schema";
+import { applications, scoringConditions, scoringFeatures, scoringFeaturesToScoringConditions, scoringPayouts, userFeatures, userLoans, userProfiles, users } from "../../../../../db/schema";
 import { NextResponse, NextRequest } from "next/server";
 import { eq, sql, and, isNotNull } from "drizzle-orm";
 
@@ -69,6 +69,24 @@ export const GET = async (request: NextRequest, context: any) => {
           )
         `.as('userFeatures'),
         age: sql`EXTRACT(YEAR FROM age(${userProfiles.dateOfBirth}))`.as('age'),
+        loanTotal: sql`
+          COALESCE(
+            (SELECT SUM(ul.total)
+            FROM ${userLoans} ul
+            WHERE ul.user_id = ${users.id} AND ul.status = 'approved'), 
+            0
+          )
+        `.as('loanTotal'),
+
+        loanTotalAmount: sql`
+          COALESCE(
+            (SELECT SUM(ul.amount)
+            FROM ${userLoans} ul
+            WHERE ul.user_id = ${users.id} AND ul.status = 'approved'), 
+            0
+          )
+        `.as('loanTotalAmount'),
+        // loanTotalAmount: sql`COALESCE(SUM(${userLoans.amount}), 0)`.mapWith(val => Number(val) || 0),
       })
       .from(userProfiles)
       .leftJoin(users, eq(users.id, userProfiles.userId))
@@ -219,10 +237,12 @@ export const GET = async (request: NextRequest, context: any) => {
       if (score >= max) {
         scoreStatus = 'accept';
       }
-      //verify
+
       return NextResponse.json({
         id: row.id,
         userId: row.userId,
+        loanTotal: row.loanTotal,
+        loanTotalAmount: row.loanTotalAmount,
         score,
         scoreStatus,
         scorePayout,
