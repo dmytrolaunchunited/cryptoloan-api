@@ -99,7 +99,7 @@ const searchParams = (request: NextRequest): [number, number, SQL<unknown> | und
 
 /**
  * @swagger
- * /api/admin/apps:
+ * /api/admin/applications:
  *   post:
  *     summary: Create application
  *     security:

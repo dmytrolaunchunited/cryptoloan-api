@@ -41,7 +41,7 @@ export default memo(() => {
             <Typography variant="subtitle1" color="secondary" sx={{
               fontWeight: 100,
               lineHeight: 1,
-            }}>Instant crypto loans, fair terms.</Typography>
+            }}>IInstant crypto loans, fair terms.</Typography>
           </Box>
         </Box>
         <Box sx={{

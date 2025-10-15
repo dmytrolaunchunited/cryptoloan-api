@@ -122,10 +122,7 @@ export const GET = async (request: NextRequest, context: any) => {
         total: sql<number>`count(*)`.mapWith(Number),
       })
       .from(userPayments)
-      .where(status ? and(
-        eq(userPayments.userId, id),
-        eq(userPayments.status, status),
-      ) : eq(userPayments.userId, id));
+      .where(eq(userPayments.userId, id));
 
     const total = countRows.total;
 

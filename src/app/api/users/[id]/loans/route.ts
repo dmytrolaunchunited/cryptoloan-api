@@ -226,10 +226,10 @@ export const POST = async (request: NextRequest, context: any) => {
 
         await db
           .insert(userPayments)
-          .values(payments);
+          .values(payments)
 
       } else {
-        throw new Error('Oops! Something went wrong.');
+        throw new Error('Oops! Something went wrong.')
       }
     } catch (err) {
       await db

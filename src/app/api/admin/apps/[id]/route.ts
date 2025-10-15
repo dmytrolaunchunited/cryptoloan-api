@@ -7,7 +7,7 @@ import { eq } from "drizzle-orm";
  * @swagger
  * /api/admin/apps/{id}:
  *   get:
- *     summary: Find application
+ *     summary: Find user
  *     security:
  *       - ApiKeyAuth: []   
  *     tags:

@@ -1,5 +1,5 @@
 import { db } from "../../../../db";
-import { applications, users } from "../../../../db/schema";
+import { applications, userLoans, users } from "../../../../db/schema";
 import { NextResponse, NextRequest } from "next/server";
 import { eq, and } from "drizzle-orm";
 
