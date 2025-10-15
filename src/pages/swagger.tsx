@@ -3,7 +3,7 @@ import { createSwaggerSpec } from "next-swagger-doc";
 import { memo } from "react";
 import dynamic from "next/dynamic";
 import "swagger-ui-react/swagger-ui.css";
-import "swagger.css";
+import "./swagger.css";
 
 interface Props {
   spec: any;
