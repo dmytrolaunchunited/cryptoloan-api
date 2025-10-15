@@ -22,19 +22,74 @@ export const getStaticProps: GetStaticProps = async () => {
     definition: {
       openapi: "3.0.0",
       info: {
-        title: "CryptoLoan Swagger API",
-        version: "0.0.1",
+        title: "CryptoLoan API Documentation",
+        version: "1.0.0",
+        description:
+          "Comprehensive API documentation for CryptoLoan, a platform for managing crypto-backed loans. " +
+          "This documentation covers all available endpoints, authentication methods, and data models. " +
+          "Use the endpoints below to interact with the system. Most endpoints require authentication via the `X-API-KEY` header.",
+        contact: {
+          name: "CryptoLoan Support",
+          email: "support@cryptoloan.com",
+          url: "https://cryptoloan.com/support",
+        },
+        license: {
+          name: "MIT",
+          url: "https://opensource.org/licenses/MIT",
+        },
       },
+      servers: [
+        {
+          url: "https://api.cryptoloan.com",
+          description: "Production server",
+        },
+        {
+          url: "http://localhost:3000",
+          description: "Local development server",
+        },
+      ],
+      tags: [
+        {
+          name: "admin",
+          description:
+            "Administrative operations: manage users, system settings, and perform privileged actions. Only accessible to administrators.",
+        },
+        {
+          name: "user",
+          description:
+            "User operations: registration, authentication, profile management, and user-specific actions.",
+        },
+        {
+          name: "question",
+          description:
+            "Question management: create, update, delete, and retrieve questions and answers related to the platform.",
+        },
+        {
+          name: "application",
+          description:
+            "Loan application operations: submit, review, and manage crypto-backed loan applications.",
+        },
+        {
+          name: "auth",
+          description:
+            "Authentication operations: login, logout, token refresh, and related authentication endpoints.",
+        },
+      ],
       components: {
         securitySchemes: {
           ApiKeyAuth: {
             type: "apiKey",
             in: "header",
             name: "X-API-KEY",
+            description: "API key required for authentication. Obtain your API key from your account dashboard.",
           },
         },
       },
-      security: [],
+      security: [
+        {
+          ApiKeyAuth: [],
+        },
+      ],
     },
   });
   const props = { spec };

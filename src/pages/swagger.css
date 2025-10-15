@@ -2,9 +2,14 @@
   body {
     background: black
   }
-  .opblock-tag.no-desc {
+  .opblock-tag {
     border: none !important;
     padding-right: 5px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  .opblock-tag p {
+    margin: 0 !important;
   }
   .info {
     margin: 12px 0px !important;
@@ -22,5 +27,11 @@
   }
   .swagger-ui .microlight {
     filter: invert(100%) hue-rotate(180deg);
+  }
+
+  .opblock-tag a {
+    color: #9012fe !important;
+    text-transform: capitalize;
+    font-size: 24px;
   }
 }
