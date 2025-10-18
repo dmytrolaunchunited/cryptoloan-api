@@ -31,6 +31,7 @@ import { AdminScoringPayoutEdit } from "../components/admin-scoring-payout-edit"
 import { AdminScoringPayoutCreate } from "../components/admin-scoring-payout-create";
 import { AdminUserFeatureList } from "../components/admin-user-feature-list";
 import { AdminUserFeatureEdit } from "../components/admin-user-feature-edit";
+import './admin.css';
 
 interface CheckError {
   status: number;

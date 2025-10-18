@@ -39,6 +39,8 @@ export const GET = async (request: NextRequest) => {
       .select({
         id: userProfiles.id,
         userId: userProfiles.userId,
+        firstName: userProfiles.firstName,
+        lastName: userProfiles.lastName,
         dateOfBirth: userProfiles.dateOfBirth,
         citizenshipCountry: userProfiles.citizenshipCountry,
         residenceCountry: userProfiles.residenceCountry,
@@ -221,6 +223,8 @@ export const GET = async (request: NextRequest) => {
         residenceCountry: i.residenceCountry,
         createdAt: i.createdAt,
         updatedAt: i.updatedAt,
+        firstName: i.firstName,
+        lastName: i.lastName,
         score,
         scoreStatus,
         scorePayout,

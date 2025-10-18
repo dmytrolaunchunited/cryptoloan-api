@@ -117,7 +117,6 @@ export const GET = async (request: NextRequest, context: any) => {
   }
 }
 
-
 /**
  * @swagger
  * /api/users/{id}/loans:
@@ -188,13 +187,13 @@ export const POST = async (request: NextRequest, context: any) => {
 
       const walletData = await walletResponse.json();
 
-      const provider = new JsonRpcProvider("https://mainnet.base.org");
+      const provider = new JsonRpcProvider(process.env.BASE_ORG_RPC_URL);
       const wallet = new Wallet(process.env.BASE_ORG_SECRET_KEY!, provider);
 
       const ERC20_ABI = [
         "function transfer(address to, uint256 value) public returns (bool)",
       ];
-      const usdc = new Contract("0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", ERC20_ABI, wallet);
+      const usdc = new Contract(process.env.BASE_ORG_TARGET!, ERC20_ABI, wallet);
       const value = parseUnits(data.amount.toString(), 6);
       const transaction = await usdc.transfer(walletData.address, value);
 
@@ -214,7 +213,7 @@ export const POST = async (request: NextRequest, context: any) => {
           .set({ status: transactionReceipt.status ? "approved" : "canceled" })
           .where(eq(userLoans.id, userLoanRows[0].id));
 
-        const userLoanId = 36;
+        const userLoanId = userLoanRows[0].id;
 
         const days = calculatePaymentDays(new Date(), data.term, data.repayment);
         const amount = Math.floor((Number(total) / days.length) * 100) / 100; 
