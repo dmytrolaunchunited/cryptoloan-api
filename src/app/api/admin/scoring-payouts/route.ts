@@ -4,25 +4,6 @@ import { PgColumn } from "drizzle-orm/pg-core";
 import { applications, scoringPayouts } from "../../../../db/schema";
 import { db } from "../../../../db";
 
-/**
- * @swagger
- * /api/admin/scoring-payouts:
- *   get:
- *     summary: Find scoring payouts
- *     security:
- *       - ApiKeyAuth: []   
- *     tags:
- *       - admin
- *     responses:
- *       400:
- *         description: bad request
- *       403:
- *         description: forbidden
- *       401:
- *         description: unauthorized
- *       200:
- *         description: success
- */
 export const GET = async (request: NextRequest) => {
   try {
     const secretKey = request.headers.get('X-Secret-Key');
@@ -114,25 +95,6 @@ const searchParams = (request: NextRequest): [number, number, SQL<unknown> | und
   return [rangeLimit, rangeOffset, and(...where), sortOrderBy];
 }
 
-/**
- * @swagger
- * /api/admin/scoring-payouts:
- *   post:
- *     summary: Create scoring payout
- *     security:
- *       - ApiKeyAuth: []   
- *     tags:
- *       - admin
- *     responses:
- *       400:
- *         description: bad request
- *       403:
- *         description: forbidden
- *       401:
- *         description: unauthorized
- *       201:
- *         description: success
- */
 export const POST = async (request: NextRequest) => {
   try {
     const secretKey = request.headers.get('X-Secret-Key');

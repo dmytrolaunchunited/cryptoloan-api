@@ -4,25 +4,6 @@ import { userFeatures } from "../../../../db/schema";
 import { db } from "../../../../db";
 import { PgColumn } from "drizzle-orm/pg-core";
 
-/**
- * @swagger
- * /api/admin/user-features:
- *   get:
- *     summary: Find user features
- *     security:
- *       - ApiKeyAuth: []   
- *     tags:
- *       - admin
- *     responses:
- *       400:
- *         description: bad request
- *       403:
- *         description: forbidden
- *       401:
- *         description: unauthorized
- *       200:
- *         description: success
- */
 export const GET = async (request: NextRequest) => {
   try {
     const secretKey = request.headers.get('X-Secret-Key');

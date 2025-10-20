@@ -3,25 +3,6 @@ import { scoringConditions } from "../../../../../db/schema";
 import { NextResponse, NextRequest } from "next/server";
 import { eq } from "drizzle-orm";
 
-/**
- * @swagger
- * /api/admin/scoring-conditions/{id}:
- *   get:
- *     summary: Find scoring condition
- *     security:
- *       - ApiKeyAuth: []   
- *     tags:
- *       - admin
- *     responses:
- *       400:
- *         description: bad request
- *       403:
- *         description: forbidden
- *       401:
- *         description: unauthorized
- *       200:
- *         description: success
- */
 export const GET = async (request: NextRequest, context: any) => {
   try {
     const secretKey = request.headers.get('X-Secret-Key');
@@ -48,25 +29,6 @@ export const GET = async (request: NextRequest, context: any) => {
   }
 }
 
-/**
- * @swagger
- * /api/admin/scoring-conditions/{id}:
- *   delete:
- *     summary: Delete scoring condition
- *     security:
- *       - ApiKeyAuth: []   
- *     tags:
- *       - admin
- *     responses:
- *       400:
- *         description: bad request
- *       403:
- *         description: forbidden
- *       401:
- *         description: unauthorized
- *       200:
- *         description: success
- */
 export const DELETE = async (request: NextRequest, context: any) => {
   try {
     const secretKey = request.headers.get('X-Secret-Key');
@@ -92,25 +54,6 @@ export const DELETE = async (request: NextRequest, context: any) => {
   }
 }
 
-/**
- * @swagger
- * /api/admin/scoring-conditions/{id}:
- *   put:
- *     summary: Update scoring condition
- *     security:
- *       - ApiKeyAuth: []   
- *     tags:
- *       - admin
- *     responses:
- *       400:
- *         description: bad request
- *       403:
- *         description: forbidden
- *       401:
- *         description: unauthorized
- *       200:
- *         description: success
- */
 export const PUT = async (request: NextRequest, context: any) => {
   try {
     const secretKey = request.headers.get('X-Secret-Key');

@@ -3,25 +3,6 @@ import { applications, scoringQuestions, scoringQuestionsToScoringFeatures } fro
 import { NextResponse, NextRequest } from "next/server";
 import { eq, inArray, sql } from "drizzle-orm";
 
-/**
- * @swagger
- * /api/admin/scoring-questions/{id}:
- *   get:
- *     summary: Find scoring question
- *     security:
- *       - ApiKeyAuth: []   
- *     tags:
- *       - admin
- *     responses:
- *       400:
- *         description: bad request
- *       403:
- *         description: forbidden
- *       401:
- *         description: unauthorized
- *       200:
- *         description: success
- */
 export const GET = async (request: NextRequest, context: any) => {
   try {
     const secretKey = request.headers.get('X-Secret-Key');
@@ -70,25 +51,6 @@ export const GET = async (request: NextRequest, context: any) => {
   }
 }
 
-/**
- * @swagger
- * /api/admin/scoring-questions/{id}:
- *   delete:
- *     summary: Delete scoring question
- *     security:
- *       - ApiKeyAuth: []   
- *     tags:
- *       - admin
- *     responses:
- *       400:
- *         description: bad request
- *       403:
- *         description: forbidden
- *       401:
- *         description: unauthorized
- *       200:
- *         description: success
- */
 export const DELETE = async (request: NextRequest, context: any) => {
   try {
     const secretKey = request.headers.get('X-Secret-Key');
@@ -114,25 +76,6 @@ export const DELETE = async (request: NextRequest, context: any) => {
   }
 }
 
-/**
- * @swagger
- * /api/admin/scoring-questions/{id}:
- *   put:
- *     summary: Update scoring question
- *     security:
- *       - ApiKeyAuth: []   
- *     tags:
- *       - admin
- *     responses:
- *       400:
- *         description: bad request
- *       403:
- *         description: forbidden
- *       401:
- *         description: unauthorized
- *       200:
- *         description: success
- */
 export const PUT = async (request: NextRequest, context: any) => {
   try {
     const secretKey = request.headers.get('X-Secret-Key');

@@ -3,25 +3,6 @@ import { userDevices } from "../../../../../db/schema";
 import { NextResponse, NextRequest } from "next/server";
 import { eq } from "drizzle-orm";
 
-/**
- * @swagger
- * /api/admin/user-devices/{id}:
- *   get:
- *     summary: Find user device
- *     security:
- *       - ApiKeyAuth: []   
- *     tags:
- *       - admin
- *     responses:
- *       400:
- *         description: bad request
- *       403:
- *         description: forbidden
- *       401:
- *         description: unauthorized
- *       200:
- *         description: success
- */
 export const GET = async (request: NextRequest, context: any) => {
   try {
     const secretKey = request.headers.get('X-Secret-Key');
@@ -48,25 +29,6 @@ export const GET = async (request: NextRequest, context: any) => {
   }
 }
 
-/**
- * @swagger
- * /api/admin/user-devices/{id}:
- *   delete:
- *     summary: Delete user device
- *     security:
- *       - ApiKeyAuth: []   
- *     tags:
- *       - admin
- *     responses:
- *       400:
- *         description: bad request
- *       403:
- *         description: forbidden
- *       401:
- *         description: unauthorized
- *       200:
- *         description: success
- */
 export const DELETE = async (request: NextRequest, context: any) => {
   try {
     const secretKey = request.headers.get('X-Secret-Key');

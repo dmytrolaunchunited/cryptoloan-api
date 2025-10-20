@@ -50,9 +50,14 @@ export const getStaticProps: GetStaticProps = async () => {
       ],
       tags: [
         {
-          name: "admin",
+          name: "auth",
           description:
-            "Administrative operations: manage users, system settings, and perform privileged actions. Only accessible to administrators.",
+            "Authentication operations: login, logout, token refresh, and related authentication endpoints.",
+        },
+        {
+          name: "application",
+          description:
+            "Loan application operations: submit, review, and manage crypto-backed loan applications.",
         },
         {
           name: "user",
@@ -63,16 +68,6 @@ export const getStaticProps: GetStaticProps = async () => {
           name: "question",
           description:
             "Question management: create, update, delete, and retrieve questions and answers related to the platform.",
-        },
-        {
-          name: "application",
-          description:
-            "Loan application operations: submit, review, and manage crypto-backed loan applications.",
-        },
-        {
-          name: "auth",
-          description:
-            "Authentication operations: login, logout, token refresh, and related authentication endpoints.",
         },
       ],
       components: {

@@ -1,27 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-/**
- * @swagger
- * /api/admin/auth:
- *   post:
- *     summary: Authenticate admin
- *     tags:
- *       - admin
- *     requestBody:
- *       content:
- *         application/json:
- *           example:
- *             secretKey: ...
- *     responses:
- *       400:
- *         description: bad request
- *       403:
- *         description: forbidden
- *       401:
- *         description: unauthorized
- *       200:
- *         description: success
- */
 export const POST = async (request: NextRequest) => {
   try {
     const data = await request.json();
