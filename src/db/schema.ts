@@ -212,6 +212,17 @@ export const userProfiles = pgTable('user_profiles', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
+export const userNotifications = pgTable('user_notifications', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').references(() => users.id),
+  type: varchar(),
+  text: varchar(),
+  name: varchar(),
+  read: boolean(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
 export const applications = pgTable('applications', {
   id: serial('id').primaryKey(),
   name: varchar(),
@@ -219,6 +230,7 @@ export const applications = pgTable('applications', {
   currency: varchar(),
   stablecoin: varchar(),
   interest: numeric(),
+  fee: numeric(),
   scoreValidationMax: varchar(),
   scoreValidationMin: varchar(),
   isActive: boolean('is_active').default(true),
