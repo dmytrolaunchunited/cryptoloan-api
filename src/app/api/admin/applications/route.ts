@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { count, desc,asc, SQL, and, ilike } from "drizzle-orm";
 import { PgColumn } from "drizzle-orm/pg-core";
-import { applications } from "../../../../db/schema";
+import { applications, scoringConditions, scoringFeatures, scoringFeaturesToScoringConditions } from "../../../../db/schema";
 import { db } from "../../../../db";
 
 export const GET = async (request: NextRequest) => {
