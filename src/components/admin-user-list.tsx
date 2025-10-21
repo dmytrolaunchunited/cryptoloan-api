@@ -123,14 +123,6 @@ export const AdminUserList: FC = memo(() => {
         <TextField source="phone" label="PHONE" />
         <TextField source="email" label="EMAIL" />
 
-        <FunctionField label="PRIVY ID" render={i => {
-          const visible = i.privy.slice(-5);
-          const masked = '*'.repeat(5);
-          return (
-            <Chip label={`${masked}${visible}`}/>
-          );
-        }} />
-
         <ReferenceField source="applicationId" reference="applications" label="APPLICATION">
           <TextField source="name" />
         </ReferenceField>
