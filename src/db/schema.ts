@@ -231,6 +231,7 @@ export const applications = pgTable('applications', {
   stablecoin: varchar(),
   interest: numeric(),
   fee: numeric(),
+  scoreMultiplier: numeric(),
   scoreValidationMax: varchar(),
   scoreValidationMin: varchar(),
   isActive: boolean('is_active').default(true),

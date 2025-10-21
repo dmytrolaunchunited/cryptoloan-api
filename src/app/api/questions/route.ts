@@ -102,7 +102,7 @@ export const GET = async (request: NextRequest) => {
         return { id, name, options };
       });
     });
-
+    console.dir(rows, { depth: null })
     return NextResponse.json(rows, { status: 200 });
   } catch (error) {
     console.error('[API][GET][questions][:id]', error);

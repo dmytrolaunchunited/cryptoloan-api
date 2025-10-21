@@ -80,8 +80,9 @@ export const AdminApplicationList: FC = memo(() => {
         <NumberField label="Interest" source="interest" />
         <NumberField label="Fee" source="fee" />
 
-        <NumberField label="Max Score" source="scoreValidationMax" />
-        <NumberField label="Min Score" source="scoreValidationMin" />
+        <NumberField label="Score Multiplier" source="scoreMultiplier" />
+        <NumberField label="Score Max" source="scoreValidationMax" />
+        <NumberField label="Score Min" source="scoreValidationMin" />
 
         <BooleanField label="Active" source="isActive" />
 

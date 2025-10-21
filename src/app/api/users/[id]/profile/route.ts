@@ -254,7 +254,7 @@ export const GET = async (request: NextRequest, context: any) => {
         residenceCountry: row.residenceCountry,
         score,
         scoreStatus,
-        scorePayout,
+        scorePayout: Math.round(scorePayout * Number(applicationRows[0]?.scoreMultiplier || 1)),
       }, { status: 200 });
     }
     return NextResponse.json(null, { status: 200 });
