@@ -13,9 +13,7 @@
 .MuiListItemIcon-root {
   min-width: 35px !important;
 }
-.MuiTableCell-root.MuiTableCell-head {
-  padding: 16px !important;
-}
 .MuiTableCell-root {
   border: none !important;
+  padding: 4px !important;
 }

@@ -63,6 +63,9 @@ export const AdminApplicationList: FC = memo(() => {
           source="id"
           label="ID"
         />
+        <FunctionField label="UUID" render={i => (
+          i.uuid.slice(0, 5) + "***"
+        )} />
         <FunctionField label="Name" render={i => (
           <Chip size="small" sx={{
             p: 0.5
@@ -89,7 +92,7 @@ export const AdminApplicationList: FC = memo(() => {
         <DateField
           label="Updated At"
           source="updatedAt" showTime showDate />
-        <WrapperField label="Actions" textAlign="right" sortable={false}>
+        <WrapperField label="" textAlign="right" sortable={false}>
           <EditButton sx={{
             '&.MuiButtonBase-root': {
               padding: 1,
